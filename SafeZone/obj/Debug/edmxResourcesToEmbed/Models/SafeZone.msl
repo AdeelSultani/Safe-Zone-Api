@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="SafeZoneModelStoreContainer" CdmEntityContainer="SafeZoneEntities">
+    <EntitySetMapping Name="Admin">
+      <EntityTypeMapping TypeName="SafeZoneModel.Admin">
+        <MappingFragment StoreEntitySet="Admin">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="password" ColumnName="password" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CrimeCategory">
+      <EntityTypeMapping TypeName="SafeZoneModel.CrimeCategory">
+        <MappingFragment StoreEntitySet="CrimeCategory">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="crimetype" ColumnName="crimetype" />
+          <ScalarProperty Name="Intensity" ColumnName="Intensity" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GeofenceCoordinates">
+      <EntityTypeMapping TypeName="SafeZoneModel.GeofenceCoordinates">
+        <MappingFragment StoreEntitySet="GeofenceCoordinates">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="geofenceid" ColumnName="geofenceid" />
+          <ScalarProperty Name="latitude" ColumnName="latitude" />
+          <ScalarProperty Name="longitude" ColumnName="longitude" />
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Geofences">
+      <EntityTypeMapping TypeName="SafeZoneModel.Geofences">
+        <MappingFragment StoreEntitySet="Geofences">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="policestationid" ColumnName="policestationid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PoliceStation">
+      <EntityTypeMapping TypeName="SafeZoneModel.PoliceStation">
+        <MappingFragment StoreEntitySet="PoliceStation">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="station_name" ColumnName="station_name" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="phone" ColumnName="phone" />
+          <ScalarProperty Name="latitude" ColumnName="latitude" />
+          <ScalarProperty Name="longitude" ColumnName="longitude" />
+          <ScalarProperty Name="isApproved" ColumnName="isApproved" />
+          <ScalarProperty Name="address" ColumnName="address" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Relation">
+      <EntityTypeMapping TypeName="SafeZoneModel.Relation">
+        <MappingFragment StoreEntitySet="Relation">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+          <ScalarProperty Name="relatedUser" ColumnName="relatedUser" />
+          <ScalarProperty Name="relation1" ColumnName="relation" />
+          <ScalarProperty Name="priority" ColumnName="priority" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserAccount">
+      <EntityTypeMapping TypeName="SafeZoneModel.UserAccount">
+        <MappingFragment StoreEntitySet="UserAccount">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="phone" ColumnName="phone" />
+          <ScalarProperty Name="cnic" ColumnName="cnic" />
+          <ScalarProperty Name="gender" ColumnName="gender" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Report">
+      <EntityTypeMapping TypeName="SafeZoneModel.Report">
+        <MappingFragment StoreEntitySet="Report">
+          <ScalarProperty Name="isVerified" ColumnName="isVerified" />
+          <ScalarProperty Name="affectedgender" ColumnName="affectedgender" />
+          <ScalarProperty Name="longitude" ColumnName="longitude" />
+          <ScalarProperty Name="latitude" ColumnName="latitude" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="reporttime" ColumnName="reporttime" />
+          <ScalarProperty Name="reportdate" ColumnName="reportdate" />
+          <ScalarProperty Name="crimetype" ColumnName="crimetype" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+          <ScalarProperty Name="stationId" ColumnName="stationId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

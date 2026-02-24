@@ -1,0 +1,562 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SafeZoneModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CrimeCategory">
+          <Key>
+            <PropertyRef Name="crimetype" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="crimetype" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Intensity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GeofenceCoordinates">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="geofenceid" Type="int" Nullable="false" />
+          <Property Name="latitude" Type="decimal" Precision="10" Scale="8" Nullable="false" />
+          <Property Name="longitude" Type="decimal" Precision="11" Scale="8" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Geofences">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="policestationid" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PoliceStation">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="station_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="phone" Type="varchar" MaxLength="20" />
+          <Property Name="latitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="longitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="isApproved" Type="bit" Nullable="false" />
+          <Property Name="address" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Relation">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userId" Type="int" />
+          <Property Name="relatedUser" Type="int" />
+          <Property Name="relation" Type="varchar" MaxLength="50" />
+          <Property Name="priority" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Report">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stationId" Type="int" />
+          <Property Name="userId" Type="int" />
+          <Property Name="crimetype" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="reportdate" Type="date" Nullable="false" />
+          <Property Name="reporttime" Type="time" Precision="0" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="latitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="longitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="affectedgender" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="isVerified" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserAccount">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="phone" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="cnic" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="gender" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__GeofenceC__geofe__7B5B524B">
+          <End Role="Geofences" Type="Self.Geofences" Multiplicity="1" />
+          <End Role="GeofenceCoordinates" Type="Self.GeofenceCoordinates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geofences">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="GeofenceCoordinates">
+              <PropertyRef Name="geofenceid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Geofences__polic__787EE5A0">
+          <End Role="PoliceStation" Type="Self.PoliceStation" Multiplicity="1" />
+          <End Role="Geofences" Type="Self.Geofences" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PoliceStation">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Geofences">
+              <PropertyRef Name="policestationid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Relation__relate__276EDEB3">
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+          <End Role="Relation" Type="Self.Relation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Relation">
+              <PropertyRef Name="relatedUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Relation__userId__267ABA7A">
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+          <End Role="Relation" Type="Self.Relation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Relation">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Report__isVerifi__17036CC0">
+          <End Role="CrimeCategory" Type="Self.CrimeCategory" Multiplicity="1" />
+          <End Role="Report" Type="Self.Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CrimeCategory">
+              <PropertyRef Name="crimetype" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="crimetype" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Report__stationI__17F790F9">
+          <End Role="PoliceStation" Type="Self.PoliceStation" Multiplicity="0..1" />
+          <End Role="Report" Type="Self.Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PoliceStation">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="stationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Report__userId__18EBB532">
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+          <End Role="Report" Type="Self.Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SafeZoneModelStoreContainer">
+          <EntitySet Name="Admin" EntityType="Self.Admin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CrimeCategory" EntityType="Self.CrimeCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GeofenceCoordinates" EntityType="Self.GeofenceCoordinates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Geofences" EntityType="Self.Geofences" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PoliceStation" EntityType="Self.PoliceStation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Relation" EntityType="Self.Relation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Report" EntityType="Self.Report" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserAccount" EntityType="Self.UserAccount" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__GeofenceC__geofe__7B5B524B" Association="Self.FK__GeofenceC__geofe__7B5B524B">
+            <End Role="Geofences" EntitySet="Geofences" />
+            <End Role="GeofenceCoordinates" EntitySet="GeofenceCoordinates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Geofences__polic__787EE5A0" Association="Self.FK__Geofences__polic__787EE5A0">
+            <End Role="PoliceStation" EntitySet="PoliceStation" />
+            <End Role="Geofences" EntitySet="Geofences" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Relation__relate__276EDEB3" Association="Self.FK__Relation__relate__276EDEB3">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="Relation" EntitySet="Relation" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Relation__userId__267ABA7A" Association="Self.FK__Relation__userId__267ABA7A">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="Relation" EntitySet="Relation" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Report__isVerifi__17036CC0" Association="Self.FK__Report__isVerifi__17036CC0">
+            <End Role="CrimeCategory" EntitySet="CrimeCategory" />
+            <End Role="Report" EntitySet="Report" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Report__stationI__17F790F9" Association="Self.FK__Report__stationI__17F790F9">
+            <End Role="PoliceStation" EntitySet="PoliceStation" />
+            <End Role="Report" EntitySet="Report" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Report__userId__18EBB532" Association="Self.FK__Report__userId__18EBB532">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="Report" EntitySet="Report" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SafeZoneModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CrimeCategory">
+          <Key>
+            <PropertyRef Name="crimetype" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="crimetype" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Intensity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Report" Relationship="SafeZoneModel.FK__Report__isVerifi__17036CC0" FromRole="CrimeCategory" ToRole="Report" />
+        </EntityType>
+        <EntityType Name="GeofenceCoordinates">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="geofenceid" Type="Int32" Nullable="false" />
+          <Property Name="latitude" Type="Decimal" Precision="10" Scale="8" Nullable="false" />
+          <Property Name="longitude" Type="Decimal" Precision="11" Scale="8" Nullable="false" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Geofences" Relationship="Self.FK__GeofenceC__geofe__7B5B524B" FromRole="GeofenceCoordinates" ToRole="Geofences" />
+        </EntityType>
+        <EntityType Name="Geofences">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="policestationid" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GeofenceCoordinates" Relationship="Self.FK__GeofenceC__geofe__7B5B524B" FromRole="Geofences" ToRole="GeofenceCoordinates" />
+          <NavigationProperty Name="PoliceStation" Relationship="Self.FK__Geofences__polic__787EE5A0" FromRole="Geofences" ToRole="PoliceStation" />
+        </EntityType>
+        <EntityType Name="PoliceStation">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="station_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="latitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="longitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="isApproved" Type="Boolean" Nullable="false" />
+          <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Geofences" Relationship="Self.FK__Geofences__polic__787EE5A0" FromRole="PoliceStation" ToRole="Geofences" />
+          <NavigationProperty Name="Report" Relationship="SafeZoneModel.FK__Report__stationI__17F790F9" FromRole="PoliceStation" ToRole="Report" />
+        </EntityType>
+        <EntityType Name="Relation">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userId" Type="Int32" />
+          <Property Name="relatedUser" Type="Int32" />
+          <Property Name="relation1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="priority" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK__Relation__relate__276EDEB3" FromRole="Relation" ToRole="UserAccount" />
+          <NavigationProperty Name="UserAccount1" Relationship="Self.FK__Relation__userId__267ABA7A" FromRole="Relation" ToRole="UserAccount" />
+        </EntityType>
+        <EntityType Name="UserAccount">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="cnic" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="gender" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Relation" Relationship="Self.FK__Relation__relate__276EDEB3" FromRole="UserAccount" ToRole="Relation" />
+          <NavigationProperty Name="Relation1" Relationship="Self.FK__Relation__userId__267ABA7A" FromRole="UserAccount" ToRole="Relation" />
+          <NavigationProperty Name="Report" Relationship="SafeZoneModel.FK__Report__userId__18EBB532" FromRole="UserAccount" ToRole="Report" />
+        </EntityType>
+        <Association Name="FK__GeofenceC__geofe__7B5B524B">
+          <End Role="Geofences" Type="Self.Geofences" Multiplicity="1" />
+          <End Role="GeofenceCoordinates" Type="Self.GeofenceCoordinates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geofences">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="GeofenceCoordinates">
+              <PropertyRef Name="geofenceid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Geofences__polic__787EE5A0">
+          <End Role="PoliceStation" Type="Self.PoliceStation" Multiplicity="1" />
+          <End Role="Geofences" Type="Self.Geofences" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PoliceStation">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Geofences">
+              <PropertyRef Name="policestationid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Relation__relate__276EDEB3">
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+          <End Role="Relation" Type="Self.Relation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Relation">
+              <PropertyRef Name="relatedUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Relation__userId__267ABA7A">
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+          <End Role="Relation" Type="Self.Relation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Relation">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SafeZoneEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Admin" EntityType="Self.Admin" />
+          <EntitySet Name="CrimeCategory" EntityType="Self.CrimeCategory" />
+          <EntitySet Name="GeofenceCoordinates" EntityType="Self.GeofenceCoordinates" />
+          <EntitySet Name="Geofences" EntityType="Self.Geofences" />
+          <EntitySet Name="PoliceStation" EntityType="Self.PoliceStation" />
+          <EntitySet Name="Relation" EntityType="Self.Relation" />
+          <EntitySet Name="UserAccount" EntityType="Self.UserAccount" />
+          <AssociationSet Name="FK__GeofenceC__geofe__7B5B524B" Association="Self.FK__GeofenceC__geofe__7B5B524B">
+            <End Role="Geofences" EntitySet="Geofences" />
+            <End Role="GeofenceCoordinates" EntitySet="GeofenceCoordinates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Geofences__polic__787EE5A0" Association="Self.FK__Geofences__polic__787EE5A0">
+            <End Role="PoliceStation" EntitySet="PoliceStation" />
+            <End Role="Geofences" EntitySet="Geofences" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Relation__relate__276EDEB3" Association="Self.FK__Relation__relate__276EDEB3">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="Relation" EntitySet="Relation" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Relation__userId__267ABA7A" Association="Self.FK__Relation__userId__267ABA7A">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="Relation" EntitySet="Relation" />
+          </AssociationSet>
+          <EntitySet Name="Report" EntityType="SafeZoneModel.Report" />
+          <AssociationSet Name="FK__Report__isVerifi__17036CC0" Association="SafeZoneModel.FK__Report__isVerifi__17036CC0">
+            <End Role="CrimeCategory" EntitySet="CrimeCategory" />
+            <End Role="Report" EntitySet="Report" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Report__stationI__17F790F9" Association="SafeZoneModel.FK__Report__stationI__17F790F9">
+            <End Role="PoliceStation" EntitySet="PoliceStation" />
+            <End Role="Report" EntitySet="Report" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Report__userId__18EBB532" Association="SafeZoneModel.FK__Report__userId__18EBB532">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="Report" EntitySet="Report" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Report">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stationId" Type="Int32" />
+          <Property Name="userId" Type="Int32" />
+          <Property Name="crimetype" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="reportdate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="reporttime" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="latitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
+          <Property Name="longitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
+          <Property Name="affectedgender" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="isVerified" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CrimeCategory" Relationship="SafeZoneModel.FK__Report__isVerifi__17036CC0" FromRole="Report" ToRole="CrimeCategory" />
+          <NavigationProperty Name="PoliceStation" Relationship="SafeZoneModel.FK__Report__stationI__17F790F9" FromRole="Report" ToRole="PoliceStation" />
+          <NavigationProperty Name="UserAccount" Relationship="SafeZoneModel.FK__Report__userId__18EBB532" FromRole="Report" ToRole="UserAccount" />
+        </EntityType>
+        <Association Name="FK__Report__isVerifi__17036CC0">
+          <End Type="SafeZoneModel.CrimeCategory" Role="CrimeCategory" Multiplicity="1" />
+          <End Type="SafeZoneModel.Report" Role="Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CrimeCategory">
+              <PropertyRef Name="crimetype" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="crimetype" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Report__stationI__17F790F9">
+          <End Type="SafeZoneModel.PoliceStation" Role="PoliceStation" Multiplicity="0..1" />
+          <End Type="SafeZoneModel.Report" Role="Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PoliceStation">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="stationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Report__userId__18EBB532">
+          <End Type="SafeZoneModel.UserAccount" Role="UserAccount" Multiplicity="0..1" />
+          <End Type="SafeZoneModel.Report" Role="Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SafeZoneModelStoreContainer" CdmEntityContainer="SafeZoneEntities">
+          <EntitySetMapping Name="Admin">
+            <EntityTypeMapping TypeName="SafeZoneModel.Admin">
+              <MappingFragment StoreEntitySet="Admin">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CrimeCategory">
+            <EntityTypeMapping TypeName="SafeZoneModel.CrimeCategory">
+              <MappingFragment StoreEntitySet="CrimeCategory">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="crimetype" ColumnName="crimetype" />
+                <ScalarProperty Name="Intensity" ColumnName="Intensity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GeofenceCoordinates">
+            <EntityTypeMapping TypeName="SafeZoneModel.GeofenceCoordinates">
+              <MappingFragment StoreEntitySet="GeofenceCoordinates">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="geofenceid" ColumnName="geofenceid" />
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Geofences">
+            <EntityTypeMapping TypeName="SafeZoneModel.Geofences">
+              <MappingFragment StoreEntitySet="Geofences">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="policestationid" ColumnName="policestationid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PoliceStation">
+            <EntityTypeMapping TypeName="SafeZoneModel.PoliceStation">
+              <MappingFragment StoreEntitySet="PoliceStation">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="station_name" ColumnName="station_name" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="isApproved" ColumnName="isApproved" />
+                <ScalarProperty Name="address" ColumnName="address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Relation">
+            <EntityTypeMapping TypeName="SafeZoneModel.Relation">
+              <MappingFragment StoreEntitySet="Relation">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="relatedUser" ColumnName="relatedUser" />
+                <ScalarProperty Name="relation1" ColumnName="relation" />
+                <ScalarProperty Name="priority" ColumnName="priority" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAccount">
+            <EntityTypeMapping TypeName="SafeZoneModel.UserAccount">
+              <MappingFragment StoreEntitySet="UserAccount">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="cnic" ColumnName="cnic" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Report">
+            <EntityTypeMapping TypeName="SafeZoneModel.Report">
+              <MappingFragment StoreEntitySet="Report">
+                <ScalarProperty Name="isVerified" ColumnName="isVerified" />
+                <ScalarProperty Name="affectedgender" ColumnName="affectedgender" />
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="reporttime" ColumnName="reporttime" />
+                <ScalarProperty Name="reportdate" ColumnName="reportdate" />
+                <ScalarProperty Name="crimetype" ColumnName="crimetype" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="stationId" ColumnName="stationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
