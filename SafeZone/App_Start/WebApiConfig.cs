@@ -10,7 +10,11 @@ namespace SafeZone
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
 
+            var json = config.Formatters.JsonFormatter;
+            json.SerializerSettings.DateFormatString = "yyyy-MM-dd";
+           // json.SerializerSettings.Formatting = Formatting.Indented;
             // Web API routes
             config.MapHttpAttributeRoutes();
 
