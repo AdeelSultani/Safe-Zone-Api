@@ -72,6 +72,7 @@
     <Property Name="longitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
     <Property Name="affectedgender" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="isVerified" Type="bit" Nullable="false" />
+    <Property Name="address" Type="varchar" MaxLength="200" />
   </EntityType>
   <EntityType Name="UserAccount">
     <Key>

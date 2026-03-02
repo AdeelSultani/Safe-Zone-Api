@@ -25,6 +25,7 @@ namespace SafeZone.Models
         public decimal longitude { get; set; }
         public string affectedgender { get; set; }
         public bool isVerified { get; set; }
+        public string address { get; set; }
     
         public virtual CrimeCategory CrimeCategory { get; set; }
         public virtual PoliceStation PoliceStation { get; set; }

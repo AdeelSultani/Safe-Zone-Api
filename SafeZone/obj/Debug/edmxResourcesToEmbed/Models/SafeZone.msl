@@ -80,6 +80,7 @@
     <EntitySetMapping Name="Report">
       <EntityTypeMapping TypeName="SafeZoneModel.Report">
         <MappingFragment StoreEntitySet="Report">
+          <ScalarProperty Name="address" ColumnName="address" />
           <ScalarProperty Name="isVerified" ColumnName="isVerified" />
           <ScalarProperty Name="affectedgender" ColumnName="affectedgender" />
           <ScalarProperty Name="longitude" ColumnName="longitude" />

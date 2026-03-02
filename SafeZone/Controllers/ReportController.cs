@@ -11,7 +11,7 @@ namespace SafeZone.Controllers
     public class ReportController : ApiController
     {
 
-       SafeZoneEntities db=new SafeZoneEntities();
+        SafeZoneEntities db = new SafeZoneEntities();
 
         [HttpGet]
         public HttpResponseMessage getCategory()
@@ -20,13 +20,13 @@ namespace SafeZone.Controllers
             try
             {
 
-                var data = db.CrimeCategory.Select(c=>c.crimetype).ToList();
+                var data = db.CrimeCategory.Select(c => c.crimetype).ToList();
                 if (data.Count == 0)
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotFound); 
+                    return Request.CreateResponse(HttpStatusCode.NotFound);
                 }
-                return Request.CreateResponse(HttpStatusCode.OK,data);
-            }catch(Exception ex) {
+                return Request.CreateResponse(HttpStatusCode.OK, data);
+            } catch (Exception ex) {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
@@ -65,6 +65,7 @@ namespace SafeZone.Controllers
                     {
                         report.stationId = geofence.policestationid;
 
+
                         db.Report.Add(report);
                         db.SaveChanges();
 
@@ -79,7 +80,7 @@ namespace SafeZone.Controllers
                     }
                 }
 
-                return Request.CreateResponse( HttpStatusCode.NotFound, "Location not inside any geofence");
+                return Request.CreateResponse(HttpStatusCode.NotFound, "Location not inside any geofence");
             }
             catch (Exception ex)
             {
@@ -111,5 +112,26 @@ namespace SafeZone.Controllers
 
             return inside;
         }
+
+
+        [HttpGet]
+        public HttpResponseMessage chkreportexist(Report report)
+        {
+            var existing = db.Report.FirstOrDefault(r =>
+                Math.Abs((double)r.latitude - (double)report.latitude) < 0.0001 &&
+                Math.Abs((double)r.longitude - (double)report.longitude) < 0.0001 &&
+                r.reportdate == report.reportdate&& r.reporttime == report.reporttime &&
+                r.crimetype == report.crimetype 
+            );
+
+            if (existing != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, "Report already exists");
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound, "Report does not exist");
+            }
+        }
+        }
     }
-}

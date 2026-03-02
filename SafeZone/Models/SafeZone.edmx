@@ -77,6 +77,7 @@
           <Property Name="longitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
           <Property Name="affectedgender" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="isVerified" Type="bit" Nullable="false" />
+          <Property Name="address" Type="varchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="UserAccount">
           <Key>
@@ -400,6 +401,7 @@
           <NavigationProperty Name="CrimeCategory" Relationship="SafeZoneModel.FK__Report__isVerifi__17036CC0" FromRole="Report" ToRole="CrimeCategory" />
           <NavigationProperty Name="PoliceStation" Relationship="SafeZoneModel.FK__Report__stationI__17F790F9" FromRole="Report" ToRole="PoliceStation" />
           <NavigationProperty Name="UserAccount" Relationship="SafeZoneModel.FK__Report__userId__18EBB532" FromRole="Report" ToRole="UserAccount" />
+          <Property Name="address" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK__Report__isVerifi__17036CC0">
           <End Type="SafeZoneModel.CrimeCategory" Role="CrimeCategory" Multiplicity="1" />
@@ -522,6 +524,7 @@
           <EntitySetMapping Name="Report">
             <EntityTypeMapping TypeName="SafeZoneModel.Report">
               <MappingFragment StoreEntitySet="Report">
+                <ScalarProperty Name="address" ColumnName="address" />
                 <ScalarProperty Name="isVerified" ColumnName="isVerified" />
                 <ScalarProperty Name="affectedgender" ColumnName="affectedgender" />
                 <ScalarProperty Name="longitude" ColumnName="longitude" />

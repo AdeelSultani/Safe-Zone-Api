@@ -184,6 +184,7 @@
     <NavigationProperty Name="CrimeCategory" Relationship="SafeZoneModel.FK__Report__isVerifi__17036CC0" FromRole="Report" ToRole="CrimeCategory" />
     <NavigationProperty Name="PoliceStation" Relationship="SafeZoneModel.FK__Report__stationI__17F790F9" FromRole="Report" ToRole="PoliceStation" />
     <NavigationProperty Name="UserAccount" Relationship="SafeZoneModel.FK__Report__userId__18EBB532" FromRole="Report" ToRole="UserAccount" />
+    <Property Name="address" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
   </EntityType>
   <Association Name="FK__Report__isVerifi__17036CC0">
     <End Type="SafeZoneModel.CrimeCategory" Role="CrimeCategory" Multiplicity="1" />

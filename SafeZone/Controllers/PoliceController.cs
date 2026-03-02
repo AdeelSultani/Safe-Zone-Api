@@ -55,7 +55,7 @@ namespace SafeZone.Controllers
                             id = a.id,
                             station_name = a.station_name,
                             address = a.address,
-                           
+
                         }
                         ).FirstOrDefault();
                 if (data == null)
@@ -76,39 +76,79 @@ namespace SafeZone.Controllers
         {
             try
             {
-                if (stationid == null)
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "ID is null");
-                }
+
                 var data = db.Report.Where(x => x.stationId == stationid && x.isVerified == false)
                     .Select(
                      a => new UnApprovedReport
                      {
-                        Id = a.Id,
-                        userId = a.userId,
-                        stationId=a.stationId,
-                        crimetype = a.crimetype,
+                         Id = a.Id,
+                         userId = a.userId,
+                         stationId = a.stationId,
+                         crimetype = a.crimetype,
                          isVerified = a.isVerified,
                          reportdate = a.reportdate,
-                        reporttime = a.reporttime,
-                        description = a.description,
-                        latitude = a.latitude,
-                        longitude = a.longitude,
+                         reporttime = a.reporttime,
+                         description = a.description,
+                         latitude = a.latitude,
+                         longitude = a.longitude,
                          affectedgender = a.affectedgender,
-                         // username = a.UserAccount.name,
-                         // stationname = a.PoliceStation.station_name,
-
+                         address = a.address,
 
                      }
                     )
                     .ToList();
 
-                if(data.Count==0)
+                if (data.Count == 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound, "No report found");
                 }
 
-                return Request.CreateResponse(HttpStatusCode.OK,data);
+                return Request.CreateResponse(HttpStatusCode.OK, data);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+
+        [HttpPost]
+        public HttpResponseMessage approvedReport(int id)
+        {
+            try
+            {
+                var data=db.Report.Where(x => x.Id == id).FirstOrDefault();
+                if (data == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Report not found");
+                }
+                if (data.isVerified == true)
+                { 
+                    return Request.CreateResponse( HttpStatusCode.Conflict,"Report already approved");
+                }
+                data.isVerified = true;
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Report Approved Successfully");
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+        [HttpPost]
+        public HttpResponseMessage deleteReport(int id)
+        {
+            try
+            {
+                var data = db.Report.FirstOrDefault(x => x.Id == id);
+                if (data == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Report not found");
+                }
+                db.Report.Remove(data);
+                db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK,"Report Deleted");
             }
             catch (Exception e)
             {
