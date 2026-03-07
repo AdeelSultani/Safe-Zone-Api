@@ -54,7 +54,7 @@
     <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="userId" Type="int" />
     <Property Name="relatedUser" Type="int" />
-    <Property Name="relation" Type="varchar" MaxLength="50" />
+    <Property Name="relationship" Type="varchar" MaxLength="50" />
     <Property Name="priority" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Report">
@@ -110,7 +110,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Relation__relate__276EDEB3">
+  <Association Name="FK__Relation__relate__2A164134">
     <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
     <End Role="Relation" Type="Self.Relation" Multiplicity="*" />
     <ReferentialConstraint>
@@ -122,7 +122,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Relation__userId__267ABA7A">
+  <Association Name="FK__Relation__userId__29221CFB">
     <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
     <End Role="Relation" Type="Self.Relation" Multiplicity="*" />
     <ReferentialConstraint>
@@ -187,11 +187,11 @@
       <End Role="PoliceStation" EntitySet="PoliceStation" />
       <End Role="Geofences" EntitySet="Geofences" />
     </AssociationSet>
-    <AssociationSet Name="FK__Relation__relate__276EDEB3" Association="Self.FK__Relation__relate__276EDEB3">
+    <AssociationSet Name="FK__Relation__relate__2A164134" Association="Self.FK__Relation__relate__2A164134">
       <End Role="UserAccount" EntitySet="UserAccount" />
       <End Role="Relation" EntitySet="Relation" />
     </AssociationSet>
-    <AssociationSet Name="FK__Relation__userId__267ABA7A" Association="Self.FK__Relation__userId__267ABA7A">
+    <AssociationSet Name="FK__Relation__userId__29221CFB" Association="Self.FK__Relation__userId__29221CFB">
       <End Role="UserAccount" EntitySet="UserAccount" />
       <End Role="Relation" EntitySet="Relation" />
     </AssociationSet>

@@ -59,8 +59,26 @@
           <ScalarProperty Name="id" ColumnName="id" />
           <ScalarProperty Name="userId" ColumnName="userId" />
           <ScalarProperty Name="relatedUser" ColumnName="relatedUser" />
-          <ScalarProperty Name="relation1" ColumnName="relation" />
+          <ScalarProperty Name="relationship" ColumnName="relationship" />
           <ScalarProperty Name="priority" ColumnName="priority" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Report">
+      <EntityTypeMapping TypeName="SafeZoneModel.Report">
+        <MappingFragment StoreEntitySet="Report">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="stationId" ColumnName="stationId" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+          <ScalarProperty Name="crimetype" ColumnName="crimetype" />
+          <ScalarProperty Name="reportdate" ColumnName="reportdate" />
+          <ScalarProperty Name="reporttime" ColumnName="reporttime" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="latitude" ColumnName="latitude" />
+          <ScalarProperty Name="longitude" ColumnName="longitude" />
+          <ScalarProperty Name="affectedgender" ColumnName="affectedgender" />
+          <ScalarProperty Name="isVerified" ColumnName="isVerified" />
+          <ScalarProperty Name="address" ColumnName="address" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -74,24 +92,6 @@
           <ScalarProperty Name="phone" ColumnName="phone" />
           <ScalarProperty Name="cnic" ColumnName="cnic" />
           <ScalarProperty Name="gender" ColumnName="gender" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Report">
-      <EntityTypeMapping TypeName="SafeZoneModel.Report">
-        <MappingFragment StoreEntitySet="Report">
-          <ScalarProperty Name="address" ColumnName="address" />
-          <ScalarProperty Name="isVerified" ColumnName="isVerified" />
-          <ScalarProperty Name="affectedgender" ColumnName="affectedgender" />
-          <ScalarProperty Name="longitude" ColumnName="longitude" />
-          <ScalarProperty Name="latitude" ColumnName="latitude" />
-          <ScalarProperty Name="description" ColumnName="description" />
-          <ScalarProperty Name="reporttime" ColumnName="reporttime" />
-          <ScalarProperty Name="reportdate" ColumnName="reportdate" />
-          <ScalarProperty Name="crimetype" ColumnName="crimetype" />
-          <ScalarProperty Name="userId" ColumnName="userId" />
-          <ScalarProperty Name="stationId" ColumnName="stationId" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -17,7 +17,7 @@ namespace SafeZone.Models
         public int id { get; set; }
         public Nullable<int> userId { get; set; }
         public Nullable<int> relatedUser { get; set; }
-        public string relation1 { get; set; }
+        public string relationship { get; set; }
         public int priority { get; set; }
     
         public virtual UserAccount UserAccount { get; set; }

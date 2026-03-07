@@ -31,7 +31,7 @@ namespace SafeZone.Models
         public DbSet<Geofences> Geofences { get; set; }
         public DbSet<PoliceStation> PoliceStation { get; set; }
         public DbSet<Relation> Relation { get; set; }
-        public DbSet<UserAccount> UserAccount { get; set; }
         public DbSet<Report> Report { get; set; }
+        public DbSet<UserAccount> UserAccount { get; set; }
     }
 }
