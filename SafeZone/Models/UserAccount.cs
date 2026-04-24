@@ -16,6 +16,7 @@ namespace SafeZone.Models
     {
         public UserAccount()
         {
+            this.History = new HashSet<History>();
             this.Relation = new HashSet<Relation>();
             this.Relation1 = new HashSet<Relation>();
             this.Report = new HashSet<Report>();
@@ -29,6 +30,7 @@ namespace SafeZone.Models
         public string cnic { get; set; }
         public string gender { get; set; }
     
+        public virtual ICollection<History> History { get; set; }
         public virtual ICollection<Relation> Relation { get; set; }
         public virtual ICollection<Relation> Relation1 { get; set; }
         public virtual ICollection<Report> Report { get; set; }

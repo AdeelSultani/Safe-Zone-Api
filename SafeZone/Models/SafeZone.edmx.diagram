@@ -4,18 +4,21 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="b914f9b00f884c6e9a4a19de7c75dd6e" Name="Diagram1">
-        <EntityTypeShape EntityType="SafeZoneModel.Admin" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SafeZoneModel.CrimeCategory" Width="1.5" PointX="3.75" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="SafeZoneModel.GeofenceCoordinates" Width="1.5" PointX="8.25" PointY="7.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="SafeZoneModel.Geofences" Width="1.5" PointX="6" PointY="8" IsExpanded="true" />
-        <EntityTypeShape EntityType="SafeZoneModel.PoliceStation" Width="1.5" PointX="3.75" PointY="7.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="SafeZoneModel.Relation" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="SafeZoneModel.Report" Width="1.5" PointX="6" PointY="2.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SafeZoneModel.UserAccount" Width="1.5" PointX="0.75" PointY="3.25" IsExpanded="true" />
+      <Diagram DiagramId="d9c18fc99caf41c18a1654d481726328" Name="Diagram1">
+        <EntityTypeShape EntityType="SafeZoneModel.Admin" Width="1.5" PointX="5.75" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SafeZoneModel.CrimeCategory" Width="1.5" PointX="3.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SafeZoneModel.GeofenceCoordinates" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SafeZoneModel.Geofences" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SafeZoneModel.History" Width="1.5" PointX="3" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="SafeZoneModel.PoliceStation" Width="1.5" PointX="0.75" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SafeZoneModel.Relation" Width="1.5" PointX="3" PointY="12.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SafeZoneModel.Report" Width="1.5" PointX="6" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SafeZoneModel.UserAccount" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
         <AssociationConnector Association="SafeZoneModel.FK__Report__isVerifi__17036CC0" ManuallyRouted="false" />
         <AssociationConnector Association="SafeZoneModel.FK__GeofenceC__geofe__7B5B524B" ManuallyRouted="false" />
         <AssociationConnector Association="SafeZoneModel.FK__Geofences__polic__787EE5A0" ManuallyRouted="false" />
+        <AssociationConnector Association="SafeZoneModel.FK__History__station__3C34F16F" ManuallyRouted="false" />
+        <AssociationConnector Association="SafeZoneModel.FK__History__userId__3D2915A8" ManuallyRouted="false" />
         <AssociationConnector Association="SafeZoneModel.FK__Report__stationI__17F790F9" ManuallyRouted="false" />
         <AssociationConnector Association="SafeZoneModel.FK__Relation__relate__2A164134" ManuallyRouted="false" />
         <AssociationConnector Association="SafeZoneModel.FK__Relation__userId__29221CFB" ManuallyRouted="false" />

@@ -212,11 +212,14 @@
     <Compile Include="Models\Geofences.cs">
       <DependentUpon>SafeZone.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\History.cs">
+      <DependentUpon>SafeZone.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ownModel\Geofencecoordinatesrequest.cs" />
     <Compile Include="Models\ownModel\GetFamily.cs" />
     <Compile Include="Models\ownModel\GetJurisdiction.cs" />
     <Compile Include="Models\ownModel\LoginPolice.cs" />
-    <Compile Include="Models\ownModel\Unapprovedreport.cs" />
+    <Compile Include="Models\ownModel\report.cs" />
     <Compile Include="Models\ownModel\Unapprovedstation.cs" />
     <Compile Include="Models\PoliceStation.cs">
       <DependentUpon>SafeZone.tt</DependentUpon>

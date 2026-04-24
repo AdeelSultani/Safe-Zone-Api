@@ -12,26 +12,22 @@ namespace SafeZone.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PoliceStation
+    public partial class History
     {
-        public PoliceStation()
-        {
-            this.Geofences = new HashSet<Geofences>();
-            this.History = new HashSet<History>();
-            this.Report = new HashSet<Report>();
-        }
-    
         public int id { get; set; }
-        public string station_name { get; set; }
-        public string password { get; set; }
-        public string phone { get; set; }
+        public Nullable<int> stationId { get; set; }
+        public Nullable<int> userId { get; set; }
+        public string category { get; set; }
         public decimal latitude { get; set; }
         public decimal longitude { get; set; }
-        public bool isApproved { get; set; }
+        public string description { get; set; }
+        public string gender { get; set; }
+        public System.TimeSpan reportTime { get; set; }
+        public System.DateTime reportDate { get; set; }
+        public Nullable<bool> isVerified { get; set; }
         public string address { get; set; }
     
-        public virtual ICollection<Geofences> Geofences { get; set; }
-        public virtual ICollection<History> History { get; set; }
-        public virtual ICollection<Report> Report { get; set; }
+        public virtual PoliceStation PoliceStation { get; set; }
+        public virtual UserAccount UserAccount { get; set; }
     }
 }

@@ -29,6 +29,7 @@ namespace SafeZone.Models
         public DbSet<CrimeCategory> CrimeCategory { get; set; }
         public DbSet<GeofenceCoordinates> GeofenceCoordinates { get; set; }
         public DbSet<Geofences> Geofences { get; set; }
+        public DbSet<History> History { get; set; }
         public DbSet<PoliceStation> PoliceStation { get; set; }
         public DbSet<Relation> Relation { get; set; }
         public DbSet<Report> Report { get; set; }

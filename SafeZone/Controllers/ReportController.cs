@@ -1,4 +1,5 @@
 ﻿using SafeZone.Models;
+using SafeZone.Models.ownModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,9 @@ namespace SafeZone.Controllers
                     return Request.CreateResponse(HttpStatusCode.NotFound);
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, data);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
@@ -120,8 +123,8 @@ namespace SafeZone.Controllers
             var existing = db.Report.FirstOrDefault(r =>
                 Math.Abs((double)r.latitude - (double)report.latitude) < 0.0001 &&
                 Math.Abs((double)r.longitude - (double)report.longitude) < 0.0001 &&
-                r.reportdate == report.reportdate&& r.reporttime == report.reporttime &&
-                r.crimetype == report.crimetype 
+                r.reportdate == report.reportdate && r.reporttime == report.reporttime &&
+                r.crimetype == report.crimetype
             );
 
             if (existing != null)
@@ -133,5 +136,74 @@ namespace SafeZone.Controllers
                 return Request.CreateResponse(HttpStatusCode.NotFound, "Report does not exist");
             }
         }
+
+        [HttpGet]
+        public HttpResponseMessage DeleteReport()
+        {
+            try
+            {
+                DateTime twoMonthsAgo = DateTime.Now.AddMonths(-2);
+                DateTime oneMonthAgo = DateTime.Now.AddMonths(-1);
+
+                var reports = db.Report
+                    .Where(r => r.isVerified == true)
+                    .ToList();
+
+                if (reports.Count == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No verified reports found");
+                }
+
+                foreach (var report in reports)
+                {
+                    // FIX: trim + lowercase
+                    string crimeType = report.crimetype.Trim().ToLower();
+
+                    bool shouldArchive = false;
+
+                    if (crimeType == "murder")
+                    {
+                        if (report.reportdate <= twoMonthsAgo)
+                            shouldArchive = true;
+                    }
+                    else
+                    {
+                        
+                        if (report.reportdate <= oneMonthAgo)
+                            shouldArchive = true;
+                    }
+
+                    if (shouldArchive)
+                    {
+                        var history = new History
+                        {
+                            id = report.Id,
+                            stationId = report.stationId,
+                            userId = report.userId,
+                            category = report.crimetype, // original value save karo
+                            latitude = report.latitude,
+                            longitude = report.longitude,
+                            description = report.description,
+                            gender = report.affectedgender,
+                            reportDate = report.reportdate,
+                            reportTime = report.reporttime,
+                            isVerified = report.isVerified
+                        };
+
+                        db.History.Add(history);
+                        db.Report.Remove(report);
+                    }
+                }
+
+                // IMPORTANT: SaveChanges loop ke bahar hona chahiye
+                db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Reports History Saved Successfully");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
+    }
     }

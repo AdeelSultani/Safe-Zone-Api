@@ -39,6 +39,24 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="History">
+      <EntityTypeMapping TypeName="SafeZoneModel.History">
+        <MappingFragment StoreEntitySet="History">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="stationId" ColumnName="stationId" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+          <ScalarProperty Name="category" ColumnName="category" />
+          <ScalarProperty Name="latitude" ColumnName="latitude" />
+          <ScalarProperty Name="longitude" ColumnName="longitude" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="gender" ColumnName="gender" />
+          <ScalarProperty Name="reportTime" ColumnName="reportTime" />
+          <ScalarProperty Name="reportDate" ColumnName="reportDate" />
+          <ScalarProperty Name="isVerified" ColumnName="isVerified" />
+          <ScalarProperty Name="address" ColumnName="address" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="PoliceStation">
       <EntityTypeMapping TypeName="SafeZoneModel.PoliceStation">
         <MappingFragment StoreEntitySet="PoliceStation">

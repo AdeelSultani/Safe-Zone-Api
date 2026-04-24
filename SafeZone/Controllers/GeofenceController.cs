@@ -99,7 +99,10 @@ namespace SafeZone.Controllers
                        OrderIndex = x.OrderIndex
                    }).ToList()
                 }).ToList();
-
+               if (data.Count == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No geofences found");
+                }
 
                 return Request.CreateResponse(HttpStatusCode.OK, data);
             }

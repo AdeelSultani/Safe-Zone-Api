@@ -38,6 +38,25 @@
     <NavigationProperty Name="GeofenceCoordinates" Relationship="Self.FK__GeofenceC__geofe__7B5B524B" FromRole="Geofences" ToRole="GeofenceCoordinates" />
     <NavigationProperty Name="PoliceStation" Relationship="Self.FK__Geofences__polic__787EE5A0" FromRole="Geofences" ToRole="PoliceStation" />
   </EntityType>
+  <EntityType Name="History">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="stationId" Type="Int32" />
+    <Property Name="userId" Type="Int32" />
+    <Property Name="category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="latitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+    <Property Name="longitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+    <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="gender" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="reportTime" Type="Time" Nullable="false" Precision="7" />
+    <Property Name="reportDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="isVerified" Type="Boolean" />
+    <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="PoliceStation" Relationship="Self.FK__History__station__3C34F16F" FromRole="History" ToRole="PoliceStation" />
+    <NavigationProperty Name="UserAccount" Relationship="Self.FK__History__userId__3D2915A8" FromRole="History" ToRole="UserAccount" />
+  </EntityType>
   <EntityType Name="PoliceStation">
     <Key>
       <PropertyRef Name="id" />
@@ -51,6 +70,7 @@
     <Property Name="isApproved" Type="Boolean" Nullable="false" />
     <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="Geofences" Relationship="Self.FK__Geofences__polic__787EE5A0" FromRole="PoliceStation" ToRole="Geofences" />
+    <NavigationProperty Name="History" Relationship="Self.FK__History__station__3C34F16F" FromRole="PoliceStation" ToRole="History" />
     <NavigationProperty Name="Report" Relationship="Self.FK__Report__stationI__17F790F9" FromRole="PoliceStation" ToRole="Report" />
   </EntityType>
   <EntityType Name="Relation">
@@ -96,6 +116,7 @@
     <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="cnic" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="gender" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="History" Relationship="Self.FK__History__userId__3D2915A8" FromRole="UserAccount" ToRole="History" />
     <NavigationProperty Name="Relation" Relationship="Self.FK__Relation__relate__2A164134" FromRole="UserAccount" ToRole="Relation" />
     <NavigationProperty Name="Relation1" Relationship="Self.FK__Relation__userId__29221CFB" FromRole="UserAccount" ToRole="Relation" />
     <NavigationProperty Name="Report" Relationship="Self.FK__Report__userId__18EBB532" FromRole="UserAccount" ToRole="Report" />
@@ -133,6 +154,30 @@
       </Principal>
       <Dependent Role="Geofences">
         <PropertyRef Name="policestationid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__History__station__3C34F16F">
+    <End Role="PoliceStation" Type="Self.PoliceStation" Multiplicity="0..1" />
+    <End Role="History" Type="Self.History" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PoliceStation">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="History">
+        <PropertyRef Name="stationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__History__userId__3D2915A8">
+    <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+    <End Role="History" Type="Self.History" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="History">
+        <PropertyRef Name="userId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -189,6 +234,7 @@
     <EntitySet Name="CrimeCategory" EntityType="Self.CrimeCategory" />
     <EntitySet Name="GeofenceCoordinates" EntityType="Self.GeofenceCoordinates" />
     <EntitySet Name="Geofences" EntityType="Self.Geofences" />
+    <EntitySet Name="History" EntityType="Self.History" />
     <EntitySet Name="PoliceStation" EntityType="Self.PoliceStation" />
     <EntitySet Name="Relation" EntityType="Self.Relation" />
     <EntitySet Name="Report" EntityType="Self.Report" />
@@ -204,6 +250,14 @@
     <AssociationSet Name="FK__Geofences__polic__787EE5A0" Association="Self.FK__Geofences__polic__787EE5A0">
       <End Role="PoliceStation" EntitySet="PoliceStation" />
       <End Role="Geofences" EntitySet="Geofences" />
+    </AssociationSet>
+    <AssociationSet Name="FK__History__station__3C34F16F" Association="Self.FK__History__station__3C34F16F">
+      <End Role="PoliceStation" EntitySet="PoliceStation" />
+      <End Role="History" EntitySet="History" />
+    </AssociationSet>
+    <AssociationSet Name="FK__History__userId__3D2915A8" Association="Self.FK__History__userId__3D2915A8">
+      <End Role="UserAccount" EntitySet="UserAccount" />
+      <End Role="History" EntitySet="History" />
     </AssociationSet>
     <AssociationSet Name="FK__Report__stationI__17F790F9" Association="Self.FK__Report__stationI__17F790F9">
       <End Role="PoliceStation" EntitySet="PoliceStation" />

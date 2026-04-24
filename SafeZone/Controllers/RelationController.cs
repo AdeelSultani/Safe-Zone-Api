@@ -42,13 +42,14 @@ namespace SafeZone.Controllers
         {
             try
             {
-               if(relation.userId==relation.relatedUser)
+                if (relation.userId == relation.relatedUser)
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot add relation to self");
                 }
 
-             var data=db.Relation.FirstOrDefault(x=>x.userId==relation.userId && x.relatedUser==relation.relatedUser);
-                if (data != null){
+                var data = db.Relation.FirstOrDefault(x => x.userId == relation.userId && x.relatedUser == relation.relatedUser);
+                if (data != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.NotAcceptable, "Already Added in your Family Member ");
                 }
                 var priorityData = db.Relation.Where(p => p.priority == relation.priority);
@@ -64,6 +65,30 @@ namespace SafeZone.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
+        }
+        [HttpGet]
+        public HttpResponseMessage getFamilyMembers(int userId)
+        {
+            var familyMembers = from r in db.Relation
+                                join u in db.UserAccount
+                                on r.relatedUser equals u.id
+                                where r.userId == userId
+                                select new GetFamilyMemberDto
+                                {
+                                    id = u.id,
+                                    name = u.name,
+                                    phone = u.phone,
+                                    relationship = r.relationship,
+                                    priority = r.priority
+                                };
+
+            if (!familyMembers.Any())
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound,
+                    "No family members found for the given user ID.");
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, familyMembers.ToList());
         }
     }
 }

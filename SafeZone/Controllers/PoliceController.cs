@@ -63,7 +63,7 @@ namespace SafeZone.Controllers
                     return Request.CreateResponse(HttpStatusCode.NotFound, "Station not Approved");
                 }
 
-                return Request.CreateResponse(HttpStatusCode.OK, data);
+                return Request.CreateResponse(HttpStatusCode.OK,data);
             }
             catch (Exception e)
             {

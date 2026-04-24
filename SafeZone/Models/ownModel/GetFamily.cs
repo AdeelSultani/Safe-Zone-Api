@@ -11,5 +11,13 @@ namespace SafeZone.Models.ownModel
         public string Name { get; set; }
         public string Phone { get; set; }
     }
+    public class GetFamilyMemberDto
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public string phone { get; set; }
+        public string relationship { get; set; }
+        public int priority { get; set; }
 
     }
+}
