@@ -142,6 +142,199 @@ namespace SafeZone.Controllers
             }
         }
 
+        [HttpGet]
+        public HttpResponseMessage filterReports(string category = null, int? time = null)
+        {
+            List<UnApprovedReport> result = new List<UnApprovedReport>();
+            string cat = category?.Trim().ToLower();
+
+            if (string.IsNullOrEmpty(category) || category == "null")
+            {
+                category = null;
+            }
+            TimeSpan t7 = new TimeSpan(7, 0, 0);
+            TimeSpan t12 = new TimeSpan(12, 0, 0);
+            TimeSpan t17 = new TimeSpan(17, 0, 0);
+         
+
+            try
+            {
+                if (category == null && time == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Category and time parameters are required");
+                }
+
+                if (category != null && time != null)
+                {
+                    if (time == 1)
+                    {
+                        result = db.Report.Where(r => r.reporttime >= t7 &&
+                           r.reporttime < t12 &&
+                           r.crimetype.ToLower().Equals(cat))
+                              .Select(r => new UnApprovedReport
+                              {
+                                  Id = r.Id,
+                                  stationId = r.stationId,
+                                  userId = r.userId,
+                                  crimetype = r.crimetype,
+                                  reportdate = r.reportdate,
+                                  reporttime = r.reporttime,
+                                  description = r.description,
+                                  latitude = r.latitude,
+                                  longitude = r.longitude,
+                                  isVerified = r.isVerified,
+                                  affectedgender = r.affectedgender,
+                                  address = r.address
+                              })
+                            .ToList();
+                    }
+                    else if (time == 2)
+                    {
+                        result = db.Report.Where(r => r.reporttime >= t12 &&
+                           r.reporttime < t17 &&
+                           r.crimetype.ToLower().Equals(cat))
+                              .Select(r => new UnApprovedReport
+                              {
+                                  Id = r.Id,
+                                  stationId = r.stationId,
+                                  userId = r.userId,
+                                  crimetype = r.crimetype,
+                                  reportdate = r.reportdate,
+                                  reporttime = r.reporttime,
+                                  description = r.description,
+                                  latitude = r.latitude,
+                                  longitude = r.longitude,
+                                  isVerified = r.isVerified,
+                                  affectedgender = r.affectedgender,
+                                  address = r.address
+                              })
+                            .ToList();
+                    }
+                    else if (time == 3)
+                    {
+                        result = db.Report.Where(r =>
+                            (r.reporttime >= t17 || r.reporttime < t7) &&
+                            r.crimetype.ToLower().Equals(cat))
+                              .Select(r => new UnApprovedReport
+                              {
+                                  Id = r.Id,
+                                  stationId = r.stationId,
+                                  userId = r.userId,
+                                  crimetype = r.crimetype,
+                                  reportdate = r.reportdate,
+                                  reporttime = r.reporttime,
+                                  description = r.description,
+                                  latitude = r.latitude,
+                                  longitude = r.longitude,
+                                  isVerified = r.isVerified,
+                                  affectedgender = r.affectedgender,
+                                  address = r.address
+                              })
+                            .ToList();
+                    }
+                }
+
+                if (time != null && category == null)
+                {
+                    if (time == 1)
+                    {
+                        result = db.Report.Where(r => r.reporttime >= t7 &&
+                           r.reporttime < t12)
+                              .Select(r => new UnApprovedReport
+                              {
+                                  Id = r.Id,
+                                  stationId = r.stationId,
+                                  userId = r.userId,
+                                  crimetype = r.crimetype,
+                                  reportdate = r.reportdate,
+                                  reporttime = r.reporttime,
+                                  description = r.description,
+                                  latitude = r.latitude,
+                                  longitude = r.longitude,
+                                  isVerified = r.isVerified,
+                                  affectedgender = r.affectedgender,
+                                  address = r.address
+                              })
+                            .ToList();
+                    }
+                    else if (time == 2)
+                    {
+                        result = db.Report.Where(r => r.reporttime >= t12 &&
+                           r.reporttime < t17)
+                              .Select(r => new UnApprovedReport
+                              {
+                                  Id = r.Id,
+                                  stationId = r.stationId,
+                                  userId = r.userId,
+                                  crimetype = r.crimetype,
+                                  reportdate = r.reportdate,
+                                  reporttime = r.reporttime,
+                                  description = r.description,
+                                  latitude = r.latitude,
+                                  longitude = r.longitude,
+                                  isVerified = r.isVerified,
+                                  affectedgender = r.affectedgender,
+                                  address = r.address
+                              })
+                            .ToList();
+                    }
+                    else if (time == 3)
+                    {
+                        
+                        result = db.Report.Where(r =>r.reporttime >= t17 || r.reporttime < t7)
+                              .Select(r => new UnApprovedReport
+                              {
+                                  Id = r.Id,
+                                  stationId = r.stationId,
+                                  userId = r.userId,
+                                  crimetype = r.crimetype,
+                                  reportdate = r.reportdate,
+                                  reporttime = r.reporttime,
+                                  description = r.description,
+                                  latitude = r.latitude,
+                                  longitude = r.longitude,
+                                  isVerified = r.isVerified,
+                                  affectedgender = r.affectedgender,
+                                  address = r.address
+                              })
+                            .ToList();
+                    }
+                }
+
+                if (category != null && time == null)
+                {
+                    result = db.Report.Where(r => r.crimetype.ToLower().Equals(cat))
+                         .Select(r => new UnApprovedReport
+                         {
+                             Id = r.Id,
+                             stationId = r.stationId,
+                             userId = r.userId,
+                             crimetype = r.crimetype,
+                             reportdate = r.reportdate,
+                             reporttime = r.reporttime,
+                             description = r.description,
+                             latitude = r.latitude,
+                             longitude = r.longitude,
+                             isVerified = r.isVerified,
+                             affectedgender = r.affectedgender,
+                             address = r.address
+                         })
+                        .ToList();
+                }
+
+                if (result.Count == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "Not Report Found according to your filter");
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
         public double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
         {
             double R = 6371000; 

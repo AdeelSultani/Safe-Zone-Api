@@ -19,7 +19,6 @@ namespace SafeZone.Models.ownModel
      
         public bool isVerified { get; set; }
         public string affectedgender { get; set; }
-
         public string address { get; set; }
 
         //public string stationname { get; set; }

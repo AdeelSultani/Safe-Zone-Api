@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using SafeZone.Models.ownModel;
 
 namespace SafeZone.Controllers
 {
@@ -137,7 +138,7 @@ namespace SafeZone.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         public HttpResponseMessage DeleteReport()
         {
             try
@@ -156,7 +157,7 @@ namespace SafeZone.Controllers
 
                 foreach (var report in reports)
                 {
-                    // FIX: trim + lowercase
+
                     string crimeType = report.crimetype.Trim().ToLower();
 
                     bool shouldArchive = false;
@@ -168,7 +169,7 @@ namespace SafeZone.Controllers
                     }
                     else
                     {
-                        
+
                         if (report.reportdate <= oneMonthAgo)
                             shouldArchive = true;
                     }
@@ -180,7 +181,7 @@ namespace SafeZone.Controllers
                             id = report.Id,
                             stationId = report.stationId,
                             userId = report.userId,
-                            category = report.crimetype, // original value save karo
+                            category = report.crimetype,
                             latitude = report.latitude,
                             longitude = report.longitude,
                             description = report.description,
@@ -195,7 +196,6 @@ namespace SafeZone.Controllers
                     }
                 }
 
-                // IMPORTANT: SaveChanges loop ke bahar hona chahiye
                 db.SaveChanges();
 
                 return Request.CreateResponse(HttpStatusCode.OK, "Reports History Saved Successfully");
@@ -205,5 +205,6 @@ namespace SafeZone.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+       
     }
-    }
+}
