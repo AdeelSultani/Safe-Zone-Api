@@ -57,6 +57,41 @@ namespace SafeZone.Controllers
             }
         }
         [HttpGet]
+        public HttpResponseMessage getReport(String gender)
+        {
+            try
+            {
+                var reports = db.Report
+                  .Where(r => r.affectedgender == gender && r.isVerified == true)
+                  .Select(r => new UnApprovedReport
+                  {
+                      Id = r.Id,
+                      stationId = r.stationId,
+                      userId = r.userId,
+                      crimetype = r.crimetype,
+                      reportdate = r.reportdate,
+                      reporttime = r.reporttime,
+                      description = r.description,
+                      latitude = r.latitude,
+                      longitude = r.longitude,
+                      isVerified = r.isVerified,
+                      affectedgender = r.affectedgender,
+                      address = r.address
+                  })
+                  .ToList();
+                if (reports.Count == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No reports found");
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, reports);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError,e.Message);
+            }
+        }
+
+        [HttpGet]
    
         public HttpResponseMessage GetClusteredReports(string gender)
         {
@@ -145,7 +180,7 @@ namespace SafeZone.Controllers
         [HttpGet]
         public HttpResponseMessage filterReports(string category = null, int? time = null)
         {
-            List<UnApprovedReport> result = new List<UnApprovedReport>();
+            List<UnApprovedReport> reports = new List<UnApprovedReport>();
             string cat = category?.Trim().ToLower();
 
             if (string.IsNullOrEmpty(category) || category == "null")
@@ -168,7 +203,7 @@ namespace SafeZone.Controllers
                 {
                     if (time == 1)
                     {
-                        result = db.Report.Where(r => r.reporttime >= t7 &&
+                        reports = db.Report.Where(r => r.reporttime >= t7 &&
                            r.reporttime < t12 &&
                            r.crimetype.ToLower().Equals(cat))
                               .Select(r => new UnApprovedReport
@@ -190,7 +225,7 @@ namespace SafeZone.Controllers
                     }
                     else if (time == 2)
                     {
-                        result = db.Report.Where(r => r.reporttime >= t12 &&
+                        reports = db.Report.Where(r => r.reporttime >= t12 &&
                            r.reporttime < t17 &&
                            r.crimetype.ToLower().Equals(cat))
                               .Select(r => new UnApprovedReport
@@ -212,7 +247,7 @@ namespace SafeZone.Controllers
                     }
                     else if (time == 3)
                     {
-                        result = db.Report.Where(r =>
+                        reports = db.Report.Where(r =>
                             (r.reporttime >= t17 || r.reporttime < t7) &&
                             r.crimetype.ToLower().Equals(cat))
                               .Select(r => new UnApprovedReport
@@ -238,7 +273,7 @@ namespace SafeZone.Controllers
                 {
                     if (time == 1)
                     {
-                        result = db.Report.Where(r => r.reporttime >= t7 &&
+                        reports = db.Report.Where(r => r.reporttime >= t7 &&
                            r.reporttime < t12)
                               .Select(r => new UnApprovedReport
                               {
@@ -259,7 +294,7 @@ namespace SafeZone.Controllers
                     }
                     else if (time == 2)
                     {
-                        result = db.Report.Where(r => r.reporttime >= t12 &&
+                        reports = db.Report.Where(r => r.reporttime >= t12 &&
                            r.reporttime < t17)
                               .Select(r => new UnApprovedReport
                               {
@@ -280,8 +315,8 @@ namespace SafeZone.Controllers
                     }
                     else if (time == 3)
                     {
-                        
-                        result = db.Report.Where(r =>r.reporttime >= t17 || r.reporttime < t7)
+
+                        reports = db.Report.Where(r =>r.reporttime >= t17 || r.reporttime < t7)
                               .Select(r => new UnApprovedReport
                               {
                                   Id = r.Id,
@@ -303,7 +338,7 @@ namespace SafeZone.Controllers
 
                 if (category != null && time == null)
                 {
-                    result = db.Report.Where(r => r.crimetype.ToLower().Equals(cat))
+                    reports = db.Report.Where(r => r.crimetype.ToLower().Equals(cat))
                          .Select(r => new UnApprovedReport
                          {
                              Id = r.Id,
@@ -322,12 +357,59 @@ namespace SafeZone.Controllers
                         .ToList();
                 }
 
-                if (result.Count == 0)
+                if (reports.Count == 0)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, "Not Report Found according to your filter");
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No Report Found according to your filter");
+                }
+                var clusters = new List<object>();
+                var visited = new HashSet<int>();
+
+                foreach (var report in reports)
+                {
+                    if (visited.Contains(report.Id))
+                        continue;
+
+                    var clusterReports = new List<UnApprovedReport>();
+
+                    foreach (var other in reports)
+                    {
+                        double distance = CalculateDistance(
+                            (double)report.latitude,
+                            (double)report.longitude,
+                            (double)other.latitude,
+                            (double)other.longitude
+                        );
+
+                        if (distance <= 100)
+                        {
+                            clusterReports.Add(other);
+                            visited.Add(other.Id);
+                        }
+                    }
+
+                    if (clusterReports.Count > 0)
+                    {
+                        double centerLat = clusterReports.Average(r => (double)r.latitude);
+                        double centerLng = clusterReports.Average(r => (double)r.longitude);
+
+                        bool hasMurder = clusterReports.Any(r => r.crimetype.ToLower() == "murder");
+
+                        string color = hasMurder ? "red" : (clusterReports.Count >= 7 ? "red"
+        : (clusterReports.Count >= 4 ? "yellow" : null));
+
+                        clusters.Add(new
+                        {
+                            centerLatitude = centerLat,
+                            centerLongitude = centerLng,
+                            radius = 50,
+                            count = clusterReports.Count,
+                            color = color,
+                            reports = clusterReports
+                        });
+                    }
                 }
 
-                return Request.CreateResponse(HttpStatusCode.OK, result);
+                return Request.CreateResponse(HttpStatusCode.OK, clusters);
             }
             catch (Exception ex)
             {
@@ -348,5 +430,6 @@ namespace SafeZone.Controllers
             var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             return R * c;
         }
+
     }
 }

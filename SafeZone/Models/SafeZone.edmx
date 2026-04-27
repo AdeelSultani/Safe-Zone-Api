@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SafeZoneModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SafeZoneModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Admin">
           <Key>
             <PropertyRef Name="id" />
@@ -55,6 +55,19 @@
           <Property Name="reportDate" Type="date" Nullable="false" />
           <Property Name="isVerified" Type="bit" />
           <Property Name="address" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userId" Type="int" />
+          <Property Name="recipientId" Type="int" />
+          <Property Name="senderLatitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="senderLongitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="notifyDate" Type="date" Nullable="false" />
+          <Property Name="notifyTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="isSeen" Type="bit" />
         </EntityType>
         <EntityType Name="PoliceStation">
           <Key>
@@ -156,6 +169,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Notificat__isSee__503BEA1C">
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+          <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Notificat__recip__51300E55">
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+          <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="recipientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Relation__relate__2A164134">
           <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
           <End Role="Relation" Type="Self.Relation" Multiplicity="*" />
@@ -222,6 +259,7 @@
           <EntitySet Name="GeofenceCoordinates" EntityType="Self.GeofenceCoordinates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Geofences" EntityType="Self.Geofences" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="History" EntityType="Self.History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PoliceStation" EntityType="Self.PoliceStation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Relation" EntityType="Self.Relation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Report" EntityType="Self.Report" Schema="dbo" store:Type="Tables" />
@@ -241,6 +279,14 @@
           <AssociationSet Name="FK__History__userId__3D2915A8" Association="Self.FK__History__userId__3D2915A8">
             <End Role="UserAccount" EntitySet="UserAccount" />
             <End Role="History" EntitySet="History" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Notificat__isSee__503BEA1C" Association="Self.FK__Notificat__isSee__503BEA1C">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="Notification" EntitySet="Notification" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Notificat__recip__51300E55" Association="Self.FK__Notificat__recip__51300E55">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="Notification" EntitySet="Notification" />
           </AssociationSet>
           <AssociationSet Name="FK__Relation__relate__2A164134" Association="Self.FK__Relation__relate__2A164134">
             <End Role="UserAccount" EntitySet="UserAccount" />
@@ -263,8 +309,7 @@
             <End Role="Report" EntitySet="Report" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SafeZoneModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -388,6 +433,8 @@
           <NavigationProperty Name="Relation" Relationship="Self.FK__Relation__relate__2A164134" FromRole="UserAccount" ToRole="Relation" />
           <NavigationProperty Name="Relation1" Relationship="Self.FK__Relation__userId__29221CFB" FromRole="UserAccount" ToRole="Relation" />
           <NavigationProperty Name="Report" Relationship="Self.FK__Report__userId__18EBB532" FromRole="UserAccount" ToRole="Report" />
+          <NavigationProperty Name="Notification" Relationship="SafeZoneModel.FK__Notificat__isSee__503BEA1C" FromRole="UserAccount" ToRole="Notification" />
+          <NavigationProperty Name="Notification1" Relationship="SafeZoneModel.FK__Notificat__recip__51300E55" FromRole="UserAccount" ToRole="Notification" />
         </EntityType>
         <Association Name="FK__Report__isVerifi__17036CC0">
           <End Role="CrimeCategory" Type="Self.CrimeCategory" Multiplicity="1" />
@@ -543,7 +590,55 @@
             <End Role="UserAccount" EntitySet="UserAccount" />
             <End Role="Report" EntitySet="Report" />
           </AssociationSet>
+          <EntitySet Name="Notification" EntityType="SafeZoneModel.Notification" />
+          <AssociationSet Name="FK__Notificat__isSee__503BEA1C" Association="SafeZoneModel.FK__Notificat__isSee__503BEA1C">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="Notification" EntitySet="Notification" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Notificat__recip__51300E55" Association="SafeZoneModel.FK__Notificat__recip__51300E55">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="Notification" EntitySet="Notification" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userId" Type="Int32" />
+          <Property Name="recipientId" Type="Int32" />
+          <Property Name="senderLatitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
+          <Property Name="senderLongitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
+          <Property Name="notifyDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="notifyTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="isSeen" Type="Boolean" />
+          <NavigationProperty Name="UserAccount" Relationship="SafeZoneModel.FK__Notificat__isSee__503BEA1C" FromRole="Notification" ToRole="UserAccount" />
+          <NavigationProperty Name="UserAccount1" Relationship="SafeZoneModel.FK__Notificat__recip__51300E55" FromRole="Notification" ToRole="UserAccount" />
+        </EntityType>
+        <Association Name="FK__Notificat__isSee__503BEA1C">
+          <End Type="SafeZoneModel.UserAccount" Role="UserAccount" Multiplicity="0..1" />
+          <End Type="SafeZoneModel.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Notificat__recip__51300E55">
+          <End Type="SafeZoneModel.UserAccount" Role="UserAccount" Multiplicity="0..1" />
+          <End Type="SafeZoneModel.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="recipientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -659,6 +754,20 @@
                 <ScalarProperty Name="phone" ColumnName="phone" />
                 <ScalarProperty Name="cnic" ColumnName="cnic" />
                 <ScalarProperty Name="gender" ColumnName="gender" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notification">
+            <EntityTypeMapping TypeName="SafeZoneModel.Notification">
+              <MappingFragment StoreEntitySet="Notification">
+                <ScalarProperty Name="isSeen" ColumnName="isSeen" />
+                <ScalarProperty Name="notifyTime" ColumnName="notifyTime" />
+                <ScalarProperty Name="notifyDate" ColumnName="notifyDate" />
+                <ScalarProperty Name="senderLongitude" ColumnName="senderLongitude" />
+                <ScalarProperty Name="senderLatitude" ColumnName="senderLatitude" />
+                <ScalarProperty Name="recipientId" ColumnName="recipientId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

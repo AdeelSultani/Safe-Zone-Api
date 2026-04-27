@@ -120,6 +120,8 @@
     <NavigationProperty Name="Relation" Relationship="Self.FK__Relation__relate__2A164134" FromRole="UserAccount" ToRole="Relation" />
     <NavigationProperty Name="Relation1" Relationship="Self.FK__Relation__userId__29221CFB" FromRole="UserAccount" ToRole="Relation" />
     <NavigationProperty Name="Report" Relationship="Self.FK__Report__userId__18EBB532" FromRole="UserAccount" ToRole="Report" />
+    <NavigationProperty Name="Notification" Relationship="SafeZoneModel.FK__Notificat__isSee__503BEA1C" FromRole="UserAccount" ToRole="Notification" />
+    <NavigationProperty Name="Notification1" Relationship="SafeZoneModel.FK__Notificat__recip__51300E55" FromRole="UserAccount" ToRole="Notification" />
   </EntityType>
   <Association Name="FK__Report__isVerifi__17036CC0">
     <End Role="CrimeCategory" Type="Self.CrimeCategory" Multiplicity="1" />
@@ -275,5 +277,53 @@
       <End Role="UserAccount" EntitySet="UserAccount" />
       <End Role="Report" EntitySet="Report" />
     </AssociationSet>
+    <EntitySet Name="Notification" EntityType="SafeZoneModel.Notification" />
+    <AssociationSet Name="FK__Notificat__isSee__503BEA1C" Association="SafeZoneModel.FK__Notificat__isSee__503BEA1C">
+      <End Role="UserAccount" EntitySet="UserAccount" />
+      <End Role="Notification" EntitySet="Notification" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Notificat__recip__51300E55" Association="SafeZoneModel.FK__Notificat__recip__51300E55">
+      <End Role="UserAccount" EntitySet="UserAccount" />
+      <End Role="Notification" EntitySet="Notification" />
+    </AssociationSet>
   </EntityContainer>
+  <EntityType Name="Notification">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userId" Type="Int32" />
+    <Property Name="recipientId" Type="Int32" />
+    <Property Name="senderLatitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
+    <Property Name="senderLongitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
+    <Property Name="notifyDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="notifyTime" Type="Time" Nullable="false" Precision="7" />
+    <Property Name="isSeen" Type="Boolean" />
+    <NavigationProperty Name="UserAccount" Relationship="SafeZoneModel.FK__Notificat__isSee__503BEA1C" FromRole="Notification" ToRole="UserAccount" />
+    <NavigationProperty Name="UserAccount1" Relationship="SafeZoneModel.FK__Notificat__recip__51300E55" FromRole="Notification" ToRole="UserAccount" />
+  </EntityType>
+  <Association Name="FK__Notificat__isSee__503BEA1C">
+    <End Type="SafeZoneModel.UserAccount" Role="UserAccount" Multiplicity="0..1" />
+    <End Type="SafeZoneModel.Notification" Role="Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Notification">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Notificat__recip__51300E55">
+    <End Type="SafeZoneModel.UserAccount" Role="UserAccount" Multiplicity="0..1" />
+    <End Type="SafeZoneModel.Notification" Role="Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Notification">
+        <PropertyRef Name="recipientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

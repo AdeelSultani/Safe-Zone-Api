@@ -191,6 +191,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\GeofenceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\OsmrouteController.cs" />
     <Compile Include="Controllers\PoliceController.cs" />
     <Compile Include="Controllers\RelationController.cs" />
@@ -213,6 +214,9 @@
       <DependentUpon>SafeZone.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\History.cs">
+      <DependentUpon>SafeZone.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Notification.cs">
       <DependentUpon>SafeZone.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ownModel\Geofencecoordinatesrequest.cs" />

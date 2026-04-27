@@ -51,6 +51,19 @@
     <Property Name="isVerified" Type="bit" />
     <Property Name="address" Type="varchar" MaxLength="255" />
   </EntityType>
+  <EntityType Name="Notification">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userId" Type="int" />
+    <Property Name="recipientId" Type="int" />
+    <Property Name="senderLatitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+    <Property Name="senderLongitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+    <Property Name="notifyDate" Type="date" Nullable="false" />
+    <Property Name="notifyTime" Type="time" Precision="7" Nullable="false" />
+    <Property Name="isSeen" Type="bit" />
+  </EntityType>
   <EntityType Name="PoliceStation">
     <Key>
       <PropertyRef Name="id" />
@@ -151,6 +164,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK__Notificat__isSee__503BEA1C">
+    <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+    <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Notification">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Notificat__recip__51300E55">
+    <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+    <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Notification">
+        <PropertyRef Name="recipientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK__Relation__relate__2A164134">
     <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
     <End Role="Relation" Type="Self.Relation" Multiplicity="*" />
@@ -217,6 +254,7 @@
     <EntitySet Name="GeofenceCoordinates" EntityType="Self.GeofenceCoordinates" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Geofences" EntityType="Self.Geofences" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="History" EntityType="Self.History" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PoliceStation" EntityType="Self.PoliceStation" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Relation" EntityType="Self.Relation" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Report" EntityType="Self.Report" Schema="dbo" store:Type="Tables" />
@@ -236,6 +274,14 @@
     <AssociationSet Name="FK__History__userId__3D2915A8" Association="Self.FK__History__userId__3D2915A8">
       <End Role="UserAccount" EntitySet="UserAccount" />
       <End Role="History" EntitySet="History" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Notificat__isSee__503BEA1C" Association="Self.FK__Notificat__isSee__503BEA1C">
+      <End Role="UserAccount" EntitySet="UserAccount" />
+      <End Role="Notification" EntitySet="Notification" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Notificat__recip__51300E55" Association="Self.FK__Notificat__recip__51300E55">
+      <End Role="UserAccount" EntitySet="UserAccount" />
+      <End Role="Notification" EntitySet="Notification" />
     </AssociationSet>
     <AssociationSet Name="FK__Relation__relate__2A164134" Association="Self.FK__Relation__relate__2A164134">
       <End Role="UserAccount" EntitySet="UserAccount" />

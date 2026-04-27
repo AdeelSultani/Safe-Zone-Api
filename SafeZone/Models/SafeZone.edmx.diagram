@@ -23,6 +23,9 @@
         <AssociationConnector Association="SafeZoneModel.FK__Relation__relate__2A164134" ManuallyRouted="false" />
         <AssociationConnector Association="SafeZoneModel.FK__Relation__userId__29221CFB" ManuallyRouted="false" />
         <AssociationConnector Association="SafeZoneModel.FK__Report__userId__18EBB532" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="SafeZoneModel.Notification" Width="1.5" PointX="3" PointY="15.5" />
+        <AssociationConnector Association="SafeZoneModel.FK__Notificat__isSee__503BEA1C" />
+        <AssociationConnector Association="SafeZoneModel.FK__Notificat__recip__51300E55" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -20,6 +20,8 @@ namespace SafeZone.Models
             this.Relation = new HashSet<Relation>();
             this.Relation1 = new HashSet<Relation>();
             this.Report = new HashSet<Report>();
+            this.Notification = new HashSet<Notification>();
+            this.Notification1 = new HashSet<Notification>();
         }
     
         public int id { get; set; }
@@ -34,5 +36,7 @@ namespace SafeZone.Models
         public virtual ICollection<Relation> Relation { get; set; }
         public virtual ICollection<Relation> Relation1 { get; set; }
         public virtual ICollection<Report> Report { get; set; }
+        public virtual ICollection<Notification> Notification { get; set; }
+        public virtual ICollection<Notification> Notification1 { get; set; }
     }
 }

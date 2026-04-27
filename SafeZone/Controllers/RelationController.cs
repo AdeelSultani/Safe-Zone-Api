@@ -52,7 +52,7 @@ namespace SafeZone.Controllers
                 {
                     return Request.CreateResponse(HttpStatusCode.NotAcceptable, "Already Added in your Family Member ");
                 }
-                var priorityData = db.Relation.Where(p => p.priority == relation.priority);
+                var priorityData = db.Relation.Where(p => p.priority == relation.priority && p.userId==relation.userId);
                 if (priorityData.Any())
                 {
                     return Request.CreateResponse(HttpStatusCode.Conflict, "Priority already exists. Please choose a different priority.");

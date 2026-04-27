@@ -34,5 +34,6 @@ namespace SafeZone.Models
         public DbSet<Relation> Relation { get; set; }
         public DbSet<Report> Report { get; set; }
         public DbSet<UserAccount> UserAccount { get; set; }
+        public DbSet<Notification> Notification { get; set; }
     }
 }

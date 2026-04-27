@@ -113,5 +113,19 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Notification">
+      <EntityTypeMapping TypeName="SafeZoneModel.Notification">
+        <MappingFragment StoreEntitySet="Notification">
+          <ScalarProperty Name="isSeen" ColumnName="isSeen" />
+          <ScalarProperty Name="notifyTime" ColumnName="notifyTime" />
+          <ScalarProperty Name="notifyDate" ColumnName="notifyDate" />
+          <ScalarProperty Name="senderLongitude" ColumnName="senderLongitude" />
+          <ScalarProperty Name="senderLatitude" ColumnName="senderLatitude" />
+          <ScalarProperty Name="recipientId" ColumnName="recipientId" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>
