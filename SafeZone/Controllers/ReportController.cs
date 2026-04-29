@@ -143,8 +143,8 @@ namespace SafeZone.Controllers
         {
             try
             {
-                DateTime twoMonthsAgo = DateTime.Now.AddMonths(-2);
-                DateTime oneMonthAgo = DateTime.Now.AddMonths(-1);
+                DateTime threeMonthsAgo = DateTime.Now.AddMonths(-3);
+                DateTime twoMonthAgo = DateTime.Now.AddMonths(-2);
 
                 var reports = db.Report
                     .Where(r => r.isVerified == true)
@@ -164,13 +164,13 @@ namespace SafeZone.Controllers
 
                     if (crimeType == "murder")
                     {
-                        if (report.reportdate <= twoMonthsAgo)
+                        if (report.reportdate <= threeMonthsAgo)
                             shouldArchive = true;
                     }
                     else
                     {
 
-                        if (report.reportdate <= oneMonthAgo)
+                        if (report.reportdate <= twoMonthAgo)
                             shouldArchive = true;
                     }
 

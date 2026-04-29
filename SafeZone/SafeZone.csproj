@@ -225,6 +225,7 @@
     <Compile Include="Models\ownModel\LoginPolice.cs" />
     <Compile Include="Models\ownModel\report.cs" />
     <Compile Include="Models\ownModel\Unapprovedstation.cs" />
+    <Compile Include="Models\ownModel\ZoneReport.cs" />
     <Compile Include="Models\PoliceStation.cs">
       <DependentUpon>SafeZone.tt</DependentUpon>
     </Compile>

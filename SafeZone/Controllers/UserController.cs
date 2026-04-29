@@ -98,8 +98,8 @@ namespace SafeZone.Controllers
             try
             {
                 var reports = db.Report
-                    .Where(r => r.affectedgender == gender && r.isVerified == true)
-                    .Select(r => new UnApprovedReport
+                    .Where(r => r.affectedgender == gender)
+                    .Select(r => new ZoneReport
                     {
                         Id = r.Id,
                         stationId = r.stationId,
@@ -112,7 +112,8 @@ namespace SafeZone.Controllers
                         longitude = r.longitude,
                         isVerified = r.isVerified,
                         affectedgender = r.affectedgender,
-                        address = r.address
+                        address = r.address,
+                        intensity=r.CrimeCategory.Intensity
                     })
                     .ToList();
 
@@ -129,7 +130,7 @@ namespace SafeZone.Controllers
                     if (visited.Contains(report.Id))
                         continue;
 
-                    var clusterReports = new List<UnApprovedReport>();
+                    var clusterReports = new List<ZoneReport>();
 
                     foreach (var other in reports)
                     {
@@ -140,7 +141,7 @@ namespace SafeZone.Controllers
                             (double)other.longitude
                         );
 
-                        if (distance <= 100)
+                        if (distance <= 200)
                         {
                             clusterReports.Add(other);
                             visited.Add(other.Id);
@@ -153,16 +154,16 @@ namespace SafeZone.Controllers
                         double centerLng = clusterReports.Average(r => (double)r.longitude);
 
                         bool hasMurder = clusterReports.Any(r => r.crimetype.ToLower() == "murder");
-
-                        string color = hasMurder ? "red": (clusterReports.Count >= 7 ?"red"
-        : (clusterReports.Count >= 4 ? "yellow" : null));
+                        int IntensitySum = clusterReports.Sum(r => r.intensity);
+                        string color = hasMurder ? "red" : (IntensitySum > 15 ? "red"
+                          : (IntensitySum > 10 ? "yellow" : null));
 
                         clusters.Add(new
                         {
                             centerLatitude = centerLat,
                             centerLongitude = centerLng,
-                            radius = 50,
-                            count = clusterReports.Count,
+                            radius = 90,
+                            totalIntensity = IntensitySum,
                             color = color,
                             reports = clusterReports
                         });
@@ -180,7 +181,7 @@ namespace SafeZone.Controllers
         [HttpGet]
         public HttpResponseMessage filterReports(string category = null, int? time = null)
         {
-            List<UnApprovedReport> reports = new List<UnApprovedReport>();
+            List<ZoneReport> reports = new List<ZoneReport>();
             string cat = category?.Trim().ToLower();
 
             if (string.IsNullOrEmpty(category) || category == "null")
@@ -206,7 +207,7 @@ namespace SafeZone.Controllers
                         reports = db.Report.Where(r => r.reporttime >= t7 &&
                            r.reporttime < t12 &&
                            r.crimetype.ToLower().Equals(cat))
-                              .Select(r => new UnApprovedReport
+                              .Select(r => new ZoneReport
                               {
                                   Id = r.Id,
                                   stationId = r.stationId,
@@ -219,7 +220,8 @@ namespace SafeZone.Controllers
                                   longitude = r.longitude,
                                   isVerified = r.isVerified,
                                   affectedgender = r.affectedgender,
-                                  address = r.address
+                                  address = r.address,
+                                  intensity=r.CrimeCategory.Intensity
                               })
                             .ToList();
                     }
@@ -228,7 +230,7 @@ namespace SafeZone.Controllers
                         reports = db.Report.Where(r => r.reporttime >= t12 &&
                            r.reporttime < t17 &&
                            r.crimetype.ToLower().Equals(cat))
-                              .Select(r => new UnApprovedReport
+                              .Select(r => new ZoneReport
                               {
                                   Id = r.Id,
                                   stationId = r.stationId,
@@ -241,7 +243,8 @@ namespace SafeZone.Controllers
                                   longitude = r.longitude,
                                   isVerified = r.isVerified,
                                   affectedgender = r.affectedgender,
-                                  address = r.address
+                                  address = r.address,
+                                  intensity=r.CrimeCategory.Intensity
                               })
                             .ToList();
                     }
@@ -250,7 +253,7 @@ namespace SafeZone.Controllers
                         reports = db.Report.Where(r =>
                             (r.reporttime >= t17 || r.reporttime < t7) &&
                             r.crimetype.ToLower().Equals(cat))
-                              .Select(r => new UnApprovedReport
+                              .Select(r => new ZoneReport
                               {
                                   Id = r.Id,
                                   stationId = r.stationId,
@@ -263,7 +266,8 @@ namespace SafeZone.Controllers
                                   longitude = r.longitude,
                                   isVerified = r.isVerified,
                                   affectedgender = r.affectedgender,
-                                  address = r.address
+                                  address = r.address,
+                                  intensity= r.CrimeCategory.Intensity
                               })
                             .ToList();
                     }
@@ -275,7 +279,7 @@ namespace SafeZone.Controllers
                     {
                         reports = db.Report.Where(r => r.reporttime >= t7 &&
                            r.reporttime < t12)
-                              .Select(r => new UnApprovedReport
+                              .Select(r => new ZoneReport
                               {
                                   Id = r.Id,
                                   stationId = r.stationId,
@@ -288,7 +292,8 @@ namespace SafeZone.Controllers
                                   longitude = r.longitude,
                                   isVerified = r.isVerified,
                                   affectedgender = r.affectedgender,
-                                  address = r.address
+                                  address = r.address,
+                                  intensity=r.CrimeCategory.Intensity
                               })
                             .ToList();
                     }
@@ -296,7 +301,7 @@ namespace SafeZone.Controllers
                     {
                         reports = db.Report.Where(r => r.reporttime >= t12 &&
                            r.reporttime < t17)
-                              .Select(r => new UnApprovedReport
+                              .Select(r => new ZoneReport
                               {
                                   Id = r.Id,
                                   stationId = r.stationId,
@@ -309,7 +314,8 @@ namespace SafeZone.Controllers
                                   longitude = r.longitude,
                                   isVerified = r.isVerified,
                                   affectedgender = r.affectedgender,
-                                  address = r.address
+                                  address = r.address,
+                                  intensity= r.CrimeCategory.Intensity
                               })
                             .ToList();
                     }
@@ -317,7 +323,7 @@ namespace SafeZone.Controllers
                     {
 
                         reports = db.Report.Where(r =>r.reporttime >= t17 || r.reporttime < t7)
-                              .Select(r => new UnApprovedReport
+                              .Select(r => new ZoneReport
                               {
                                   Id = r.Id,
                                   stationId = r.stationId,
@@ -330,7 +336,8 @@ namespace SafeZone.Controllers
                                   longitude = r.longitude,
                                   isVerified = r.isVerified,
                                   affectedgender = r.affectedgender,
-                                  address = r.address
+                                  address = r.address,
+                                  intensity=r.CrimeCategory.Intensity
                               })
                             .ToList();
                     }
@@ -339,7 +346,7 @@ namespace SafeZone.Controllers
                 if (category != null && time == null)
                 {
                     reports = db.Report.Where(r => r.crimetype.ToLower().Equals(cat))
-                         .Select(r => new UnApprovedReport
+                         .Select(r => new ZoneReport
                          {
                              Id = r.Id,
                              stationId = r.stationId,
@@ -352,7 +359,8 @@ namespace SafeZone.Controllers
                              longitude = r.longitude,
                              isVerified = r.isVerified,
                              affectedgender = r.affectedgender,
-                             address = r.address
+                             address = r.address,
+                             intensity=r.CrimeCategory.Intensity
                          })
                         .ToList();
                 }
@@ -369,7 +377,7 @@ namespace SafeZone.Controllers
                     if (visited.Contains(report.Id))
                         continue;
 
-                    var clusterReports = new List<UnApprovedReport>();
+                    var clusterReports = new List<ZoneReport>();
 
                     foreach (var other in reports)
                     {
@@ -393,16 +401,16 @@ namespace SafeZone.Controllers
                         double centerLng = clusterReports.Average(r => (double)r.longitude);
 
                         bool hasMurder = clusterReports.Any(r => r.crimetype.ToLower() == "murder");
-
-                        string color = hasMurder ? "red" : (clusterReports.Count >= 7 ? "red"
-        : (clusterReports.Count >= 4 ? "yellow" : null));
+                        int IntensitySum = clusterReports.Sum(r => r.intensity);
+                        string color = hasMurder ? "red" : (IntensitySum > 15 ? "red"
+                          : (IntensitySum > 10 ? "yellow" : null));
 
                         clusters.Add(new
                         {
                             centerLatitude = centerLat,
                             centerLongitude = centerLng,
-                            radius = 50,
-                            count = clusterReports.Count,
+                            radius = 80,
+                            totalIntensity = IntensitySum,
                             color = color,
                             reports = clusterReports
                         });
@@ -416,6 +424,104 @@ namespace SafeZone.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+        [HttpPost]
+        public HttpResponseMessage GetFutureClusters(List<ZoneReport> zoneReports, int month)
+        {
+            try
+            {
+                // 👉 Step 1: Future valid reports filter karo
+                var futureReports = new List<ZoneReport>();
+
+                foreach (var r in zoneReports)
+                {
+                    DateTime futureDate = r.reportdate.AddMonths(month);
+                    DateTime originalDate = r.reportdate;
+
+                    string crimeType = r.crimetype.Trim().ToLower();
+
+                    bool willExist = true;
+
+                    if (crimeType == "murder")
+                    {
+                        // delete after 3 months
+                        if ((futureDate - originalDate).TotalDays >= 90)
+                            willExist = false;
+                    }
+                    else
+                    {
+                        // delete after 2 months
+                        if ((futureDate - originalDate).TotalDays >= 60)
+                            willExist = false;
+                    }
+
+                    if (willExist)
+                    {
+                        futureReports.Add(r);
+                    }
+                }
+
+                // 👉 Step 2: Cluster logic (same as tumhara pehla function)
+                var clusters = new List<object>();
+                var visited = new HashSet<int>();
+
+                foreach (var report in futureReports)
+                {
+                    if (visited.Contains(report.Id))
+                        continue;
+
+                    var clusterReports = new List<ZoneReport>();
+
+                    foreach (var other in futureReports)
+                    {
+                        double distance = CalculateDistance(
+                            (double)report.latitude,
+                            (double)report.longitude,
+                            (double)other.latitude,
+                            (double)other.longitude
+                        );
+
+                        if (distance <= 200)
+                        {
+                            clusterReports.Add(other);
+                            visited.Add(other.Id);
+                        }
+                    }
+
+                    if (clusterReports.Count > 0)
+                    {
+                        double centerLat = clusterReports.Average(r => (double)r.latitude);
+                        double centerLng = clusterReports.Average(r => (double)r.longitude);
+
+                        bool hasMurder = clusterReports.Any(r => r.crimetype.ToLower() == "murder");
+                        int intensitySum = clusterReports.Sum(r => r.intensity);
+
+                        string color = hasMurder
+                            ? "red"
+                            : (intensitySum > 15 ? "red"
+                            : (intensitySum > 10 ? "yellow" : "green"));
+
+                        clusters.Add(new
+                        {
+                            centerLatitude = centerLat,
+                            centerLongitude = centerLng,
+                            radius = 90,
+                            totalIntensity = intensitySum,
+                            color = color,
+                            reports = clusterReports
+                        });
+                    }
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK, clusters);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
 
         public double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
         {
