@@ -430,13 +430,20 @@ namespace SafeZone.Controllers
         {
             try
             {
-                // 👉 Step 1: Future valid reports filter karo
+                if (zoneReports == null || zoneReports.Count == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new List<object>());
+                }
+
                 var futureReports = new List<ZoneReport>();
 
+                DateTime now = DateTime.Now;
+
+                // 👉 STEP 1: Future filtering (correct logic)
                 foreach (var r in zoneReports)
                 {
-                    DateTime futureDate = r.reportdate.AddMonths(month);
-                    DateTime originalDate = r.reportdate;
+                    double daysPassed = (now - r.reportdate).TotalDays;
+                    double futureDays = daysPassed + (month * 30);
 
                     string crimeType = r.crimetype.Trim().ToLower();
 
@@ -444,14 +451,12 @@ namespace SafeZone.Controllers
 
                     if (crimeType == "murder")
                     {
-                        // delete after 3 months
-                        if ((futureDate - originalDate).TotalDays >= 90)
+                        if (futureDays >= 90)
                             willExist = false;
                     }
                     else
                     {
-                        // delete after 2 months
-                        if ((futureDate - originalDate).TotalDays >= 60)
+                        if (futureDays >= 60)
                             willExist = false;
                     }
 
@@ -461,7 +466,13 @@ namespace SafeZone.Controllers
                     }
                 }
 
-                // 👉 Step 2: Cluster logic (same as tumhara pehla function)
+                // 👉 Agar future me kuch nahi bacha
+                if (futureReports.Count == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new List<object>());
+                }
+
+                // 👉 STEP 2: Clustering
                 var clusters = new List<object>();
                 var visited = new HashSet<int>();
 
@@ -494,12 +505,14 @@ namespace SafeZone.Controllers
                         double centerLng = clusterReports.Average(r => (double)r.longitude);
 
                         bool hasMurder = clusterReports.Any(r => r.crimetype.ToLower() == "murder");
+
                         int intensitySum = clusterReports.Sum(r => r.intensity);
 
                         string color = hasMurder
                             ? "red"
-                            : (intensitySum > 15 ? "red"
-                            : (intensitySum > 10 ? "yellow" : "green"));
+                            : (intensitySum > 15
+                                ? "red"
+                                : (intensitySum > 10 ? "yellow" : "green"));
 
                         clusters.Add(new
                         {
@@ -517,10 +530,12 @@ namespace SafeZone.Controllers
             }
             catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+                return Request.CreateResponse(
+                    HttpStatusCode.InternalServerError,
+                    ex.Message
+                );
             }
         }
-
 
 
         public double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
