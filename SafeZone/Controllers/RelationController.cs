@@ -75,7 +75,8 @@ namespace SafeZone.Controllers
                                 where r.userId == userId
                                 select new GetFamilyMemberDto
                                 {
-                                    id = u.id,
+
+                                    id =r.id,
                                     name = u.name,
                                     phone = u.phone,
                                     relationship = r.relationship,
@@ -90,5 +91,64 @@ namespace SafeZone.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, familyMembers.ToList());
         }
+
+        [HttpDelete]
+        public HttpResponseMessage deleteFamilyMember(int id)
+        {
+            try
+            {
+                var data=db.Relation.FirstOrDefault(r=>r.id == id);
+                if (data == null) { 
+                 
+                    return Request.CreateResponse(HttpStatusCode.NotFound);
+                }
+                db.Relation.Remove(data);
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Family Member Deleted Successfully");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+        [HttpPost]
+        public HttpResponseMessage UpdateFamilymember(int id, int userId, int priority, string relation = null)
+        {
+            try
+            {
+                var priorityData = db.Relation
+                    .Where(p => p.priority == priority && p.userId == userId && p.id != id);
+
+                if (priorityData.Any())
+                {
+                    return Request.CreateResponse(HttpStatusCode.Conflict,
+                        "Priority already exists. Please choose a different priority.");
+                }
+
+                var data = db.Relation.FirstOrDefault(r => r.id == id);
+
+                if (data == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Record not found");
+                }
+
+                data.priority = priority;
+
+                // 👉 null safe update
+                if (!string.IsNullOrEmpty(relation) && relation.ToLower() != "null")
+                {
+                    data.relationship = relation;
+                }
+
+                db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
     }
+
 }

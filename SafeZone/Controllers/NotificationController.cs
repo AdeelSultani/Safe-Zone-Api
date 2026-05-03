@@ -39,7 +39,7 @@ namespace SafeZone.Controllers
                     senderLatitude = senderlat,
                     senderLongitude = senderlng,
                     notifyDate = now.Date,
-                    notifyTime = new TimeSpan(now.Hour, now.Minute, now.Second),
+                    notifyTime = new TimeSpan(now.Hour, now.Minute, 0),
                     isSeen = false
                 };
 
@@ -54,9 +54,7 @@ namespace SafeZone.Controllers
 
                     await Task.Delay(30000);
 
-                    var check = db.Notification
-                        .AsNoTracking()
-                        .FirstOrDefault(n => n.id == notification.id);
+                    var check = db.Notification.AsNoTracking().FirstOrDefault(n => n.id == notification.id);
 
                     if (check != null && check.isSeen == true)
                     {
@@ -66,6 +64,13 @@ namespace SafeZone.Controllers
                             status = "Accepted"
                         });
                     }
+                }
+                var existing = db.Notification.FirstOrDefault(n => n.id == notification.id);
+
+                if (existing != null && existing.isSeen == false)
+                {
+                    db.Notification.Remove(existing);
+                    db.SaveChanges();
                 }
 
                 return Ok(new
@@ -102,11 +107,6 @@ namespace SafeZone.Controllers
         }
 
 
-
-
-
-
-
         /// <summary>
         ///https://localhost:44303/api/sos/notifications?userid=1
         /// </summary>
@@ -114,7 +114,7 @@ namespace SafeZone.Controllers
         /// <returns></returns>
 
         [HttpGet]
-        [Route("api/sos/notifications")]
+      //  [Route("api/sos/notifications")]
         public IHttpActionResult GetNotifications(int userId)
         {
             var data = (from n in db.Notification
@@ -127,7 +127,6 @@ namespace SafeZone.Controllers
                             n.userId,
                             n.recipientId,
                             userName = u.name,
-                            
                             n.senderLatitude,
                             n.senderLongitude,
                             n.notifyDate,

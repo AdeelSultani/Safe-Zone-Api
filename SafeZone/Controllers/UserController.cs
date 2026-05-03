@@ -508,11 +508,9 @@ namespace SafeZone.Controllers
 
                         int intensitySum = clusterReports.Sum(r => r.intensity);
 
-                        string color = hasMurder
-                            ? "red"
-                            : (intensitySum > 15
-                                ? "red"
-                                : (intensitySum > 10 ? "yellow" : "green"));
+                        string color = hasMurder ? "red"
+                            : (intensitySum > 15 ? "red"
+                            : (intensitySum > 10 ? "yellow" : null));
 
                         clusters.Add(new
                         {
