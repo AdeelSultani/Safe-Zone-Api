@@ -35,8 +35,7 @@ namespace SafeZone.Controllers
             }
         }
 
-        ////////
-        ///
+      
         [HttpPost]
         public HttpResponseMessage SaveReport(Report report)
         {
@@ -77,7 +76,7 @@ namespace SafeZone.Controllers
                         {
                             geofenceName = geofence.name,
                             policeStationId = geofence.policestationid,
-                            reportId = report.Id   // return inserted ID
+                            reportId = report.Id  
                         };
 
                         return Request.CreateResponse(HttpStatusCode.OK, result);
@@ -92,8 +91,6 @@ namespace SafeZone.Controllers
             }
         }
 
-        // -------------------------
-        // Simple Point-in-Polygon function
         private bool IsPointInsidePolygon(decimal lat, decimal lng, List<dynamic> polygon)
         {
             int count = polygon.Count;
@@ -178,16 +175,16 @@ namespace SafeZone.Controllers
                     {
                         var history = new History
                         {
-                            id = report.Id,
+                            Id = report.Id,
                             stationId = report.stationId,
                             userId = report.userId,
-                            category = report.crimetype,
+                            crimetype = report.crimetype,
                             latitude = report.latitude,
                             longitude = report.longitude,
                             description = report.description,
-                            gender = report.affectedgender,
-                            reportDate = report.reportdate,
-                            reportTime = report.reporttime,
+                            affectedgender = report.affectedgender,
+                            reportdate = report.reportdate,
+                            reporttime = report.reporttime,
                             isVerified = report.isVerified
                         };
 

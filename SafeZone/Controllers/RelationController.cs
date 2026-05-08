@@ -134,7 +134,6 @@ namespace SafeZone.Controllers
 
                 data.priority = priority;
 
-                // 👉 null safe update
                 if (!string.IsNullOrEmpty(relation) && relation.ToLower() != "null")
                 {
                     data.relationship = relation;

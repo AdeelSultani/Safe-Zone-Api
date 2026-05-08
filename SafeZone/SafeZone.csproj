@@ -189,6 +189,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\FinalController.cs" />
     <Compile Include="Controllers\FuturecolourController.cs" />
     <Compile Include="Controllers\GeofenceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -225,6 +226,7 @@
     <Compile Include="Models\ownModel\GetJurisdiction.cs" />
     <Compile Include="Models\ownModel\LoginPolice.cs" />
     <Compile Include="Models\ownModel\report.cs" />
+    <Compile Include="Models\ownModel\SendSos.cs" />
     <Compile Include="Models\ownModel\Unapprovedstation.cs" />
     <Compile Include="Models\ownModel\ZoneReport.cs" />
     <Compile Include="Models\PoliceStation.cs">
@@ -252,6 +254,9 @@
       <DependentUpon>SafeZone.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\UserAccount.cs">
+      <DependentUpon>SafeZone.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserLocation.cs">
       <DependentUpon>SafeZone.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

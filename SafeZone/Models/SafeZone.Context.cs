@@ -30,10 +30,11 @@ namespace SafeZone.Models
         public DbSet<GeofenceCoordinates> GeofenceCoordinates { get; set; }
         public DbSet<Geofences> Geofences { get; set; }
         public DbSet<History> History { get; set; }
+        public DbSet<Notification> Notification { get; set; }
         public DbSet<PoliceStation> PoliceStation { get; set; }
         public DbSet<Relation> Relation { get; set; }
         public DbSet<Report> Report { get; set; }
         public DbSet<UserAccount> UserAccount { get; set; }
-        public DbSet<Notification> Notification { get; set; }
+        public DbSet<UserLocation> UserLocation { get; set; }
     }
 }

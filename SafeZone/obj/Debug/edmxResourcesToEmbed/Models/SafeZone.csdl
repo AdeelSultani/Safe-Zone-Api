@@ -15,6 +15,7 @@
     <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="crimetype" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="Intensity" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="History" Relationship="Self.FK__History__address__6CD828CA" FromRole="CrimeCategory" ToRole="History" />
     <NavigationProperty Name="Report" Relationship="Self.FK__Report__isVerifi__17036CC0" FromRole="CrimeCategory" ToRole="Report" />
   </EntityType>
   <EntityType Name="GeofenceCoordinates">
@@ -40,22 +41,38 @@
   </EntityType>
   <EntityType Name="History">
     <Key>
-      <PropertyRef Name="id" />
+      <PropertyRef Name="Id" />
     </Key>
-    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="Id" Type="Int32" Nullable="false" />
     <Property Name="stationId" Type="Int32" />
     <Property Name="userId" Type="Int32" />
-    <Property Name="category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="crimetype" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="reportdate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="reporttime" Type="Time" Nullable="false" Precision="0" />
+    <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="latitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
     <Property Name="longitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
-    <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="gender" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="reportTime" Type="Time" Nullable="false" Precision="7" />
-    <Property Name="reportDate" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="isVerified" Type="Boolean" />
-    <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="PoliceStation" Relationship="Self.FK__History__station__3C34F16F" FromRole="History" ToRole="PoliceStation" />
-    <NavigationProperty Name="UserAccount" Relationship="Self.FK__History__userId__3D2915A8" FromRole="History" ToRole="UserAccount" />
+    <Property Name="affectedgender" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="isVerified" Type="Boolean" Nullable="false" />
+    <Property Name="address" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="CrimeCategory" Relationship="Self.FK__History__address__6CD828CA" FromRole="History" ToRole="CrimeCategory" />
+    <NavigationProperty Name="PoliceStation" Relationship="Self.FK__History__station__6DCC4D03" FromRole="History" ToRole="PoliceStation" />
+    <NavigationProperty Name="UserAccount" Relationship="Self.FK__History__userId__6EC0713C" FromRole="History" ToRole="UserAccount" />
+  </EntityType>
+  <EntityType Name="Notification">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userId" Type="Int32" />
+    <Property Name="recipientId" Type="Int32" />
+    <Property Name="senderLatitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+    <Property Name="senderLongitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+    <Property Name="notifyDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="notifyTime" Type="Time" Nullable="false" Precision="7" />
+    <Property Name="isSeen" Type="Boolean" />
+    <NavigationProperty Name="UserAccount" Relationship="Self.FK__Notificat__isSee__503BEA1C" FromRole="Notification" ToRole="UserAccount" />
+    <NavigationProperty Name="UserAccount1" Relationship="Self.FK__Notificat__recip__51300E55" FromRole="Notification" ToRole="UserAccount" />
   </EntityType>
   <EntityType Name="PoliceStation">
     <Key>
@@ -70,7 +87,7 @@
     <Property Name="isApproved" Type="Boolean" Nullable="false" />
     <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="Geofences" Relationship="Self.FK__Geofences__polic__787EE5A0" FromRole="PoliceStation" ToRole="Geofences" />
-    <NavigationProperty Name="History" Relationship="Self.FK__History__station__3C34F16F" FromRole="PoliceStation" ToRole="History" />
+    <NavigationProperty Name="History" Relationship="Self.FK__History__station__6DCC4D03" FromRole="PoliceStation" ToRole="History" />
     <NavigationProperty Name="Report" Relationship="Self.FK__Report__stationI__17F790F9" FromRole="PoliceStation" ToRole="Report" />
   </EntityType>
   <EntityType Name="Relation">
@@ -116,13 +133,26 @@
     <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="cnic" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="gender" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-    <NavigationProperty Name="History" Relationship="Self.FK__History__userId__3D2915A8" FromRole="UserAccount" ToRole="History" />
+    <NavigationProperty Name="History" Relationship="Self.FK__History__userId__6EC0713C" FromRole="UserAccount" ToRole="History" />
+    <NavigationProperty Name="Notification" Relationship="Self.FK__Notificat__isSee__503BEA1C" FromRole="UserAccount" ToRole="Notification" />
+    <NavigationProperty Name="Notification1" Relationship="Self.FK__Notificat__recip__51300E55" FromRole="UserAccount" ToRole="Notification" />
     <NavigationProperty Name="Relation" Relationship="Self.FK__Relation__relate__2A164134" FromRole="UserAccount" ToRole="Relation" />
     <NavigationProperty Name="Relation1" Relationship="Self.FK__Relation__userId__29221CFB" FromRole="UserAccount" ToRole="Relation" />
     <NavigationProperty Name="Report" Relationship="Self.FK__Report__userId__18EBB532" FromRole="UserAccount" ToRole="Report" />
-    <NavigationProperty Name="Notification" Relationship="SafeZoneModel.FK__Notificat__isSee__503BEA1C" FromRole="UserAccount" ToRole="Notification" />
-    <NavigationProperty Name="Notification1" Relationship="SafeZoneModel.FK__Notificat__recip__51300E55" FromRole="UserAccount" ToRole="Notification" />
+    <NavigationProperty Name="UserLocation" Relationship="SafeZoneModel.FK__UserLocat__userI__756D6ECB" FromRole="UserAccount" ToRole="UserLocation" />
   </EntityType>
+  <Association Name="FK__History__address__6CD828CA">
+    <End Role="CrimeCategory" Type="Self.CrimeCategory" Multiplicity="1" />
+    <End Role="History" Type="Self.History" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CrimeCategory">
+        <PropertyRef Name="crimetype" />
+      </Principal>
+      <Dependent Role="History">
+        <PropertyRef Name="crimetype" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK__Report__isVerifi__17036CC0">
     <End Role="CrimeCategory" Type="Self.CrimeCategory" Multiplicity="1" />
     <End Role="Report" Type="Self.Report" Multiplicity="*" />
@@ -159,7 +189,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__History__station__3C34F16F">
+  <Association Name="FK__History__station__6DCC4D03">
     <End Role="PoliceStation" Type="Self.PoliceStation" Multiplicity="0..1" />
     <End Role="History" Type="Self.History" Multiplicity="*" />
     <ReferentialConstraint>
@@ -171,7 +201,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__History__userId__3D2915A8">
+  <Association Name="FK__History__userId__6EC0713C">
     <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
     <End Role="History" Type="Self.History" Multiplicity="*" />
     <ReferentialConstraint>
@@ -180,6 +210,30 @@
       </Principal>
       <Dependent Role="History">
         <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Notificat__isSee__503BEA1C">
+    <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+    <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Notification">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Notificat__recip__51300E55">
+    <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+    <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Notification">
+        <PropertyRef Name="recipientId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -237,10 +291,15 @@
     <EntitySet Name="GeofenceCoordinates" EntityType="Self.GeofenceCoordinates" />
     <EntitySet Name="Geofences" EntityType="Self.Geofences" />
     <EntitySet Name="History" EntityType="Self.History" />
+    <EntitySet Name="Notification" EntityType="Self.Notification" />
     <EntitySet Name="PoliceStation" EntityType="Self.PoliceStation" />
     <EntitySet Name="Relation" EntityType="Self.Relation" />
     <EntitySet Name="Report" EntityType="Self.Report" />
     <EntitySet Name="UserAccount" EntityType="Self.UserAccount" />
+    <AssociationSet Name="FK__History__address__6CD828CA" Association="Self.FK__History__address__6CD828CA">
+      <End Role="CrimeCategory" EntitySet="CrimeCategory" />
+      <End Role="History" EntitySet="History" />
+    </AssociationSet>
     <AssociationSet Name="FK__Report__isVerifi__17036CC0" Association="Self.FK__Report__isVerifi__17036CC0">
       <End Role="CrimeCategory" EntitySet="CrimeCategory" />
       <End Role="Report" EntitySet="Report" />
@@ -253,13 +312,21 @@
       <End Role="PoliceStation" EntitySet="PoliceStation" />
       <End Role="Geofences" EntitySet="Geofences" />
     </AssociationSet>
-    <AssociationSet Name="FK__History__station__3C34F16F" Association="Self.FK__History__station__3C34F16F">
+    <AssociationSet Name="FK__History__station__6DCC4D03" Association="Self.FK__History__station__6DCC4D03">
       <End Role="PoliceStation" EntitySet="PoliceStation" />
       <End Role="History" EntitySet="History" />
     </AssociationSet>
-    <AssociationSet Name="FK__History__userId__3D2915A8" Association="Self.FK__History__userId__3D2915A8">
+    <AssociationSet Name="FK__History__userId__6EC0713C" Association="Self.FK__History__userId__6EC0713C">
       <End Role="UserAccount" EntitySet="UserAccount" />
       <End Role="History" EntitySet="History" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Notificat__isSee__503BEA1C" Association="Self.FK__Notificat__isSee__503BEA1C">
+      <End Role="UserAccount" EntitySet="UserAccount" />
+      <End Role="Notification" EntitySet="Notification" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Notificat__recip__51300E55" Association="Self.FK__Notificat__recip__51300E55">
+      <End Role="UserAccount" EntitySet="UserAccount" />
+      <End Role="Notification" EntitySet="Notification" />
     </AssociationSet>
     <AssociationSet Name="FK__Report__stationI__17F790F9" Association="Self.FK__Report__stationI__17F790F9">
       <End Role="PoliceStation" EntitySet="PoliceStation" />
@@ -277,52 +344,31 @@
       <End Role="UserAccount" EntitySet="UserAccount" />
       <End Role="Report" EntitySet="Report" />
     </AssociationSet>
-    <EntitySet Name="Notification" EntityType="SafeZoneModel.Notification" />
-    <AssociationSet Name="FK__Notificat__isSee__503BEA1C" Association="SafeZoneModel.FK__Notificat__isSee__503BEA1C">
+    <EntitySet Name="UserLocation" EntityType="SafeZoneModel.UserLocation" />
+    <AssociationSet Name="FK__UserLocat__userI__756D6ECB" Association="SafeZoneModel.FK__UserLocat__userI__756D6ECB">
       <End Role="UserAccount" EntitySet="UserAccount" />
-      <End Role="Notification" EntitySet="Notification" />
-    </AssociationSet>
-    <AssociationSet Name="FK__Notificat__recip__51300E55" Association="SafeZoneModel.FK__Notificat__recip__51300E55">
-      <End Role="UserAccount" EntitySet="UserAccount" />
-      <End Role="Notification" EntitySet="Notification" />
+      <End Role="UserLocation" EntitySet="UserLocation" />
     </AssociationSet>
   </EntityContainer>
-  <EntityType Name="Notification">
+  <EntityType Name="UserLocation">
     <Key>
       <PropertyRef Name="id" />
     </Key>
     <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="userId" Type="Int32" />
-    <Property Name="recipientId" Type="Int32" />
-    <Property Name="senderLatitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
-    <Property Name="senderLongitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
-    <Property Name="notifyDate" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="notifyTime" Type="Time" Nullable="false" Precision="7" />
-    <Property Name="isSeen" Type="Boolean" />
-    <NavigationProperty Name="UserAccount" Relationship="SafeZoneModel.FK__Notificat__isSee__503BEA1C" FromRole="Notification" ToRole="UserAccount" />
-    <NavigationProperty Name="UserAccount1" Relationship="SafeZoneModel.FK__Notificat__recip__51300E55" FromRole="Notification" ToRole="UserAccount" />
+    <Property Name="latitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
+    <Property Name="longitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
+    <NavigationProperty Name="UserAccount" Relationship="SafeZoneModel.FK__UserLocat__userI__756D6ECB" FromRole="UserLocation" ToRole="UserAccount" />
   </EntityType>
-  <Association Name="FK__Notificat__isSee__503BEA1C">
+  <Association Name="FK__UserLocat__userI__756D6ECB">
     <End Type="SafeZoneModel.UserAccount" Role="UserAccount" Multiplicity="0..1" />
-    <End Type="SafeZoneModel.Notification" Role="Notification" Multiplicity="*" />
+    <End Type="SafeZoneModel.UserLocation" Role="UserLocation" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="UserAccount">
         <PropertyRef Name="id" />
       </Principal>
-      <Dependent Role="Notification">
+      <Dependent Role="UserLocation">
         <PropertyRef Name="userId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK__Notificat__recip__51300E55">
-    <End Type="SafeZoneModel.UserAccount" Role="UserAccount" Multiplicity="0..1" />
-    <End Type="SafeZoneModel.Notification" Role="Notification" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="UserAccount">
-        <PropertyRef Name="id" />
-      </Principal>
-      <Dependent Role="Notification">
-        <PropertyRef Name="recipientId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

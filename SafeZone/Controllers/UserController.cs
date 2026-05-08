@@ -57,37 +57,23 @@ namespace SafeZone.Controllers
             }
         }
         [HttpGet]
-        public HttpResponseMessage getReport(String gender)
+        public HttpResponseMessage UpdateUserLocation(int userId, decimal latitude, decimal longitude)
         {
             try
             {
-                var reports = db.Report
-                  .Where(r => r.affectedgender == gender && r.isVerified == true)
-                  .Select(r => new UnApprovedReport
-                  {
-                      Id = r.Id,
-                      stationId = r.stationId,
-                      userId = r.userId,
-                      crimetype = r.crimetype,
-                      reportdate = r.reportdate,
-                      reporttime = r.reporttime,
-                      description = r.description,
-                      latitude = r.latitude,
-                      longitude = r.longitude,
-                      isVerified = r.isVerified,
-                      affectedgender = r.affectedgender,
-                      address = r.address
-                  })
-                  .ToList();
-                if (reports.Count == 0)
+                var user = db.UserLocation.FirstOrDefault(u => u.id == userId);
+                if (user == null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "No reports found");
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "User not found");
                 }
-                return Request.CreateResponse(HttpStatusCode.OK, reports);
+                user.latitude = latitude;
+                user.longitude = longitude;
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Location updated successfully");
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError,e.Message);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
             }
         }
 
@@ -439,7 +425,6 @@ namespace SafeZone.Controllers
 
                 DateTime now = DateTime.Now;
 
-                // 👉 STEP 1: Future filtering (correct logic)
                 foreach (var r in zoneReports)
                 {
                     double daysPassed = (now - r.reportdate).TotalDays;
@@ -466,13 +451,11 @@ namespace SafeZone.Controllers
                     }
                 }
 
-                // 👉 Agar future me kuch nahi bacha
                 if (futureReports.Count == 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, new List<object>());
                 }
 
-                // 👉 STEP 2: Clustering
                 var clusters = new List<object>();
                 var visited = new HashSet<int>();
 

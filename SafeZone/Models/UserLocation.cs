@@ -12,19 +12,13 @@ namespace SafeZone.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class CrimeCategory
+    public partial class UserLocation
     {
-        public CrimeCategory()
-        {
-            this.History = new HashSet<History>();
-            this.Report = new HashSet<Report>();
-        }
-    
         public int id { get; set; }
-        public string crimetype { get; set; }
-        public int Intensity { get; set; }
+        public Nullable<int> userId { get; set; }
+        public decimal latitude { get; set; }
+        public decimal longitude { get; set; }
     
-        public virtual ICollection<History> History { get; set; }
-        public virtual ICollection<Report> Report { get; set; }
+        public virtual UserAccount UserAccount { get; set; }
     }
 }

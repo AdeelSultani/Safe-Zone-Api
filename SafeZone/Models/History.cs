@@ -14,19 +14,20 @@ namespace SafeZone.Models
     
     public partial class History
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public Nullable<int> stationId { get; set; }
         public Nullable<int> userId { get; set; }
-        public string category { get; set; }
+        public string crimetype { get; set; }
+        public System.DateTime reportdate { get; set; }
+        public System.TimeSpan reporttime { get; set; }
+        public string description { get; set; }
         public decimal latitude { get; set; }
         public decimal longitude { get; set; }
-        public string description { get; set; }
-        public string gender { get; set; }
-        public System.TimeSpan reportTime { get; set; }
-        public System.DateTime reportDate { get; set; }
-        public Nullable<bool> isVerified { get; set; }
+        public string affectedgender { get; set; }
+        public bool isVerified { get; set; }
         public string address { get; set; }
     
+        public virtual CrimeCategory CrimeCategory { get; set; }
         public virtual PoliceStation PoliceStation { get; set; }
         public virtual UserAccount UserAccount { get; set; }
     }

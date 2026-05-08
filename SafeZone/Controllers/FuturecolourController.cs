@@ -26,7 +26,7 @@ namespace SafeZone.Controllers
                 var futureReports = new List<ZoneReport>();
                 DateTime now = DateTime.Now;
 
-                // 👉 STEP 1: Week-based filtering
+            
                 foreach (var r in zoneReports)
                 {
                     double daysPassed = (now - r.reportdate).TotalDays;
@@ -58,7 +58,7 @@ namespace SafeZone.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, new List<object>());
                 }
 
-                // 👉 STEP 2: Clustering (same as before)
+                
                 var clusters = new List<object>();
                 var visited = new HashSet<int>();
 

@@ -36,20 +36,20 @@
   </EntityType>
   <EntityType Name="History">
     <Key>
-      <PropertyRef Name="id" />
+      <PropertyRef Name="Id" />
     </Key>
-    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="Id" Type="int" Nullable="false" />
     <Property Name="stationId" Type="int" />
     <Property Name="userId" Type="int" />
-    <Property Name="category" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="crimetype" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="reportdate" Type="date" Nullable="false" />
+    <Property Name="reporttime" Type="time" Precision="0" Nullable="false" />
+    <Property Name="description" Type="varchar" MaxLength="200" Nullable="false" />
     <Property Name="latitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
     <Property Name="longitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
-    <Property Name="description" Type="varchar" MaxLength="200" />
-    <Property Name="gender" Type="varchar" MaxLength="20" Nullable="false" />
-    <Property Name="reportTime" Type="time" Precision="7" Nullable="false" />
-    <Property Name="reportDate" Type="date" Nullable="false" />
-    <Property Name="isVerified" Type="bit" />
-    <Property Name="address" Type="varchar" MaxLength="255" />
+    <Property Name="affectedgender" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="isVerified" Type="bit" Nullable="false" />
+    <Property Name="address" Type="varchar" MaxLength="200" />
   </EntityType>
   <EntityType Name="Notification">
     <Key>
@@ -116,6 +116,15 @@
     <Property Name="cnic" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="gender" Type="varchar" MaxLength="20" Nullable="false" />
   </EntityType>
+  <EntityType Name="UserLocation">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userId" Type="int" />
+    <Property Name="latitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+    <Property Name="longitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+  </EntityType>
   <Association Name="FK__GeofenceC__geofe__7B5B524B">
     <End Role="Geofences" Type="Self.Geofences" Multiplicity="1" />
     <End Role="GeofenceCoordinates" Type="Self.GeofenceCoordinates" Multiplicity="*" />
@@ -140,7 +149,19 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__History__station__3C34F16F">
+  <Association Name="FK__History__address__6CD828CA">
+    <End Role="CrimeCategory" Type="Self.CrimeCategory" Multiplicity="1" />
+    <End Role="History" Type="Self.History" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CrimeCategory">
+        <PropertyRef Name="crimetype" />
+      </Principal>
+      <Dependent Role="History">
+        <PropertyRef Name="crimetype" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__History__station__6DCC4D03">
     <End Role="PoliceStation" Type="Self.PoliceStation" Multiplicity="0..1" />
     <End Role="History" Type="Self.History" Multiplicity="*" />
     <ReferentialConstraint>
@@ -152,7 +173,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__History__userId__3D2915A8">
+  <Association Name="FK__History__userId__6EC0713C">
     <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
     <End Role="History" Type="Self.History" Multiplicity="*" />
     <ReferentialConstraint>
@@ -248,6 +269,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK__UserLocat__userI__756D6ECB">
+    <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+    <End Role="UserLocation" Type="Self.UserLocation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="UserLocation">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="SafeZoneModelStoreContainer">
     <EntitySet Name="Admin" EntityType="Self.Admin" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="CrimeCategory" EntityType="Self.CrimeCategory" Schema="dbo" store:Type="Tables" />
@@ -259,6 +292,7 @@
     <EntitySet Name="Relation" EntityType="Self.Relation" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Report" EntityType="Self.Report" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserAccount" EntityType="Self.UserAccount" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserLocation" EntityType="Self.UserLocation" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK__GeofenceC__geofe__7B5B524B" Association="Self.FK__GeofenceC__geofe__7B5B524B">
       <End Role="Geofences" EntitySet="Geofences" />
       <End Role="GeofenceCoordinates" EntitySet="GeofenceCoordinates" />
@@ -267,11 +301,15 @@
       <End Role="PoliceStation" EntitySet="PoliceStation" />
       <End Role="Geofences" EntitySet="Geofences" />
     </AssociationSet>
-    <AssociationSet Name="FK__History__station__3C34F16F" Association="Self.FK__History__station__3C34F16F">
+    <AssociationSet Name="FK__History__address__6CD828CA" Association="Self.FK__History__address__6CD828CA">
+      <End Role="CrimeCategory" EntitySet="CrimeCategory" />
+      <End Role="History" EntitySet="History" />
+    </AssociationSet>
+    <AssociationSet Name="FK__History__station__6DCC4D03" Association="Self.FK__History__station__6DCC4D03">
       <End Role="PoliceStation" EntitySet="PoliceStation" />
       <End Role="History" EntitySet="History" />
     </AssociationSet>
-    <AssociationSet Name="FK__History__userId__3D2915A8" Association="Self.FK__History__userId__3D2915A8">
+    <AssociationSet Name="FK__History__userId__6EC0713C" Association="Self.FK__History__userId__6EC0713C">
       <End Role="UserAccount" EntitySet="UserAccount" />
       <End Role="History" EntitySet="History" />
     </AssociationSet>
@@ -302,6 +340,10 @@
     <AssociationSet Name="FK__Report__userId__18EBB532" Association="Self.FK__Report__userId__18EBB532">
       <End Role="UserAccount" EntitySet="UserAccount" />
       <End Role="Report" EntitySet="Report" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserLocat__userI__756D6ECB" Association="Self.FK__UserLocat__userI__756D6ECB">
+      <End Role="UserAccount" EntitySet="UserAccount" />
+      <End Role="UserLocation" EntitySet="UserLocation" />
     </AssociationSet>
   </EntityContainer>
 </Schema>
