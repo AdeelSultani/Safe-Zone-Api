@@ -155,5 +155,42 @@ namespace SafeZone.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
             }
         }
+        [HttpGet]
+        public HttpResponseMessage GetJurisdictions()
+        {
+            try
+            {
+                var geofences = db.Geofences
+                  .Include("GeofenceCoordinates")
+                  .ToList();
+
+                var data = geofences.Select(g => new GetJurisdiction
+                {
+                    Id = g.id,
+                    Name = g.name,
+                    PoliceStationId = g.policestationid,
+
+                    Coordinates = g.GeofenceCoordinates
+                   .OrderBy(x => x.OrderIndex)
+                   .Select(x => new GeofenceCoordinateDTO
+                   {
+                       Latitude = x.latitude,
+                       Longitude = x.longitude,
+                       OrderIndex = x.OrderIndex
+                   }).ToList()
+                }).ToList();
+                if (data.Count == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No geofences found");
+                }
+                
+                return Request.CreateResponse(HttpStatusCode.OK, data);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
     }
 }

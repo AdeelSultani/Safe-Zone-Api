@@ -16,8 +16,10 @@ namespace SafeZone.Controllers
 
 
         [HttpPost]
-      //  [Route("api/notification/sendSOSWithFlow")]
-        public async Task<IHttpActionResult> SendSOS(int userId, decimal senderlat, decimal senderlng)
+        //  [Route("api/notification/sendSOSWithFlow")]
+       
+   
+        public async Task<HttpResponseMessage> sendSOS1(int userId, decimal senderlat, decimal senderlng)
         {
             try
             {
@@ -27,52 +29,55 @@ namespace SafeZone.Controllers
                     .ToList();
 
                 if (!relations.Any())
-                    return Ok("No family members found");
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new
+                    {
+                        message = "No family members found",
+                        status = "NotFound"
+                    });
+                }
 
                 var now = DateTime.Now;
-
                 var notification = new Notification
                 {
                     userId = userId,
-                    
                     senderLatitude = senderlat,
                     senderLongitude = senderlng,
                     notifyDate = now.Date,
                     notifyTime = new TimeSpan(now.Hour, now.Minute, 0),
                     isSeen = false
                 };
-
                 db.Notification.Add(notification);
                 db.SaveChanges();
 
                 foreach (var rel in relations)
                 {
-                    
                     notification.recipientId = rel.relatedUser;
                     db.SaveChanges();
 
                     await Task.Delay(30000);
 
-                    var check = db.Notification.AsNoTracking().FirstOrDefault(n => n.id == notification.id);
+                    var check = db.Notification.AsNoTracking()
+                                  .FirstOrDefault(n => n.id == notification.id);
 
                     if (check != null && check.isSeen == true)
                     {
-                        return Ok(new
+                        return Request.CreateResponse(HttpStatusCode.OK, new
                         {
-                            message = "SOS send to your family member",
+                            message = "SOS accepted by your family member",
                             status = "Accepted"
                         });
                     }
                 }
-                var existing = db.Notification.FirstOrDefault(n => n.id == notification.id);
 
+                var existing = db.Notification.FirstOrDefault(n => n.id == notification.id);
                 if (existing != null && existing.isSeen == false)
                 {
                     db.Notification.Remove(existing);
                     db.SaveChanges();
                 }
 
-                return Ok(new
+                return Request.CreateResponse(HttpStatusCode.OK, new
                 {
                     message = "No family member responded",
                     status = "Failed"
@@ -80,10 +85,13 @@ namespace SafeZone.Controllers
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new
+                {
+                    message = "Something went wrong",
+                    error = ex.Message
+                });
             }
         }
-
 
         [HttpPost]
         public HttpResponseMessage MarkAsSeen(int notificationId)
@@ -117,8 +125,8 @@ namespace SafeZone.Controllers
         public IHttpActionResult GetNotifications(int userId)
         {
             var data = (from n in db.Notification
-                        join u in db.UserAccount on n.recipientId equals u.id
-                        where n.userId == userId && n.isSeen == false
+                        join u in db.UserAccount on n.userId equals u.id
+                        where n.recipientId == userId && n.isSeen == false
                         orderby n.id descending
                         select new
                         {
@@ -239,7 +247,7 @@ namespace SafeZone.Controllers
                             message = "SOS accepted by a family member",
                             status = "Accepted",
                             orderingMethod = orderingMethod,
-                            respondedBy = item.Relation.relatedUser,
+                            respondedBy = item.Relation.name,
                             relationship = item.Relation.relationship,
                             distanceKm = item.DistanceKm == double.MaxValue
                                                 ? "Unknown"
